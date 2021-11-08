@@ -5,12 +5,19 @@ using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
-    public void StartTest()
+    public void StartTestADHD()
     {
-        //Prerobit, ze si moze uzivatel vybrat, ktory test absolvuje.
-        // - cez setActive nastavit dalsie menu, ktore sa otvori a hlavne
-        //schova. Po vybrati, sa otvori dany level.
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene(3);
+    }
+
+    public void StartTestDyslexia()
+    {
+        SceneManager.LoadScene(4);
+    }
+
+    public void StartTestSelfSufficiency()
+    {
+        SceneManager.LoadScene(5);
     }
 
     public void Credits()
