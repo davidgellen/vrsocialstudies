@@ -7,22 +7,27 @@ public class MainMenu : MonoBehaviour
 {
     public void StartTestADHD()
     {
-        SceneManager.LoadScene(3);
+        SceneManager.LoadScene(2);
     }
 
     public void StartTestDyslexia()
     {
-        SceneManager.LoadScene(4);
+        SceneManager.LoadScene(3);
     }
 
     public void StartTestSelfSufficiency()
     {
+        SceneManager.LoadScene(4);
+    }
+
+    public void StartTestObesity()
+    {
         SceneManager.LoadScene(5);
     }
 
-    public void Credits()
+    public void StartTestEmbodiment()
     {
-        SceneManager.LoadScene(2);
+        SceneManager.LoadScene(6);
     }
 
     public void Quit()
