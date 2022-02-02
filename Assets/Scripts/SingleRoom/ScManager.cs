@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class ScManager : MonoBehaviour
 {
-	private float time;
-	private bool isSaved = false;
-	private SoundManager soundManager;
-	private MotionManager motionManager;
+	public float time;
+	public bool isSaved = false;
+	public SoundManager soundManager;
+	public MotionManager motionManager;
 	
 	public GameObject player;
 	public GameObject kid;
@@ -23,16 +23,19 @@ public class ScManager : MonoBehaviour
 		motionManager = new MotionManager(recorder, loader);
 		soundManager = gameObject.AddComponent<SoundManager>();
 	
+		/*
 		soundManager.Record();
 		motionManager.Record();
 	
         time = Time.time;
 		kid.SetActive(false);
+		*/
     }
 
     // Update is called once per frame
     void Update()
     {
+		/*
         if(time > 60.0f && isSaved == false)
 		{
 			isSaved = true;
@@ -46,5 +49,6 @@ public class ScManager : MonoBehaviour
 			motionManager.Play("motion");
 		}
 		time = time + Time.deltaTime;
+		*/
     }
 }
