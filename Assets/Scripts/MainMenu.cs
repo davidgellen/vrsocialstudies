@@ -3,34 +3,37 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class MainMenu : MonoBehaviour
+public static class MainMenu 
 {
-    public void StartTestADHD()
+	public static int info = -1;
+	
+    public static void StartTestADHD()
     {
         SceneManager.LoadScene(2);
     }
 
-    public void StartTestDyslexia()
+    public static void StartTestDyslexia()
     {
         SceneManager.LoadScene(3);
     }
 
-    public void StartTestSelfSufficiency()
+    public static void StartTestSelfSufficiency()
     {
+		info = 5;
         SceneManager.LoadScene(4);
     }
 
-    public void StartTestObesity()
+    public static void StartTestObesity()
     {
         SceneManager.LoadScene(5);
     }
 
-    public void StartTestEmbodiment()
+    public static void StartTestEmbodiment()
     {
         SceneManager.LoadScene(6);
     }
 
-    public void Quit()
+    public static void Quit()
     {
         Application.Quit();
     }
