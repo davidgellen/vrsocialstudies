@@ -182,7 +182,7 @@
       "depth": 1,
       "source": "registry",
       "dependencies": {
-        "com.unity.subsystemregistration": "1.0.5"
+        "com.unity.subsystemregistration": "1.0.6"
       },
       "url": "https://packages.unity.com"
     },
@@ -245,7 +245,7 @@
       "url": "https://packages.unity.com"
     },
     "com.valvesoftware.unity.openvr": {
-      "version": "file:D:/TP 2021-22/vrsocstud/com.valvesoftware.unity.openvr-1.1.4.tgz",
+      "version": "file:D:/TimovyProjekt/TU2013.jpg/vrsocialstudies/Assets/SteamVR/OpenVRUnityXRPackage/Editor/com.valvesoftware.unity.openvr-1.1.4.tgz",
       "depth": 0,
       "source": "local-tarball",
       "dependencies": {
