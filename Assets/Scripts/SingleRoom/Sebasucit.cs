@@ -1,11 +1,46 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
+using System.IO;
+using UnityEngine.Networking;
+using System.Threading.Tasks;
+using CrazyMinnow.SALSA;
 
 public class Sebasucit : SingleRoom
 {
 	private bool isRecording;
 	public SingleRoom srm;
+	
+	
+	// ------------------------------- lipsync
+	async Task<AudioClip> LoadAudioClip(string path){
+        AudioClip clip = null;
+
+        using (UnityWebRequest uwr = UnityWebRequestMultimedia.GetAudioClip(path, AudioType.WAV))
+        {
+         uwr.SendWebRequest();
+ 
+         // wrap tasks in try/catch, otherwise it'll fail silently
+         try
+         {
+             while (!uwr.isDone) await Task.Delay(5);
+ 
+             if (uwr.isNetworkError || uwr.isHttpError) Debug.Log($"{uwr.error}");
+             else
+             {
+                 clip = DownloadHandlerAudioClip.GetContent(uwr);
+             }
+         }
+         catch (Exception err)
+         {
+             Debug.Log($"{err.Message}, {err.StackTrace}");
+         }
+     }
+ 
+     return clip;
+    }
+	// -------------------------------
 	
     void Start()
     {
@@ -157,7 +192,7 @@ public class Sebasucit : SingleRoom
 		dojde k presadeniu praticipanta a agenta
 		agent replikuje pohyb a zvuk participanta z fazy 1
 	*/
-	void phase2_start()
+	async void phase2_start()
 	{
 		makeSeat(agent, avatar);
 		
@@ -167,6 +202,26 @@ public class Sebasucit : SingleRoom
 		scmanager.motionManager.Save("motion");
 		
 		agent.GetComponent<Animator>().enabled = false;
+		
+		
+		//
+		agent.GetComponent<Salsa>().audioSrc.Stop();
+    string filename = Path.Combine(Application.dataPath, "Scripts", "SingleRoom", "sound.wav");
+     /*var www = new WWW(filename);
+     Debug.Log(www);
+     AudioClip clip = www.GetAudioClip(true, false, AudioType.WAV);*/
+     Debug.Log(filename);
+     AudioClip clip = await LoadAudioClip(filename);
+     if (clip != null){
+         agent.GetComponent<AudioSource>().clip = clip;
+         Debug.Log(clip);
+         agent.GetComponent<Salsa>().audioSrc.Play();
+    }
+     else{
+         Debug.Log("je to null");
+      }
+		//
+		
 		
 		scmanager.soundManager.Play("sound");
 		scmanager.motionManager.Play("motion");
@@ -182,7 +237,7 @@ public class Sebasucit : SingleRoom
 		agent mení animácie {anstate 1, anstate 2, anstate 3}
 		(participant utešuje agenta pred sebou)
 	*/
-	void phase3_start()
+	async void phase3_start()
 	{
 		resetAddTime();
 		wordcount = 0;
@@ -194,6 +249,24 @@ public class Sebasucit : SingleRoom
 		scmanager.motionManager.Reset();
 		scmanager.motionManager.Record();
 		agent.GetComponent<Animator>().enabled = true;
+		
+		//
+		agent.GetComponent<Salsa>().audioSrc.Stop();
+    string filename = Path.Combine(Application.dataPath, "Scripts", "SingleRoom", "sound.wav");
+     /*var www = new WWW(filename);
+     Debug.Log(www);
+     AudioClip clip = www.GetAudioClip(true, false, AudioType.WAV);*/
+     Debug.Log(filename);
+     AudioClip clip = await LoadAudioClip(filename);
+     if (clip != null){
+         agent.GetComponent<AudioSource>().clip = clip;
+         Debug.Log(clip);
+         agent.GetComponent<Salsa>().audioSrc.Play();
+    }
+     else{
+         Debug.Log("je to null");
+      }
+		//
 		
 		//changeAvatarScaleFixed(agent, false);
 	}

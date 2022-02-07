@@ -31,7 +31,7 @@ public class SingleRoom : MonoBehaviour
 	public float timeAdded = 0; 						//kolko casu sa  pridalo kvoli rozpravaniu
 	
 	// misc
-	protected const float DEFAULT_PHASE_LENGTH = 120; 	// v sekundach
+	protected const float DEFAULT_PHASE_LENGTH = 30; 	// v sekundach
 	protected float phase_length = 120;
 	
 	public int phase;					  				// aktualna faza
