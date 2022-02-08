@@ -1,4 +1,4 @@
-#if VIVEHANDTRACKING_UNITYXR
+
 
 using UnityEditor;
 
@@ -19,4 +19,4 @@ public static class WindowsPlayModeMonitor {
 
 }
 
-#endif
+
