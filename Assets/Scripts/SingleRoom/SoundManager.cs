@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
+using CrazyMinnow.SALSA;
 
 public class SoundManager : MonoBehaviour
 {
@@ -20,6 +21,12 @@ public class SoundManager : MonoBehaviour
 		public void Record()
 		{
 			audioSource.clip = Microphone.Start(Microphone.devices[0], true, 3599, 44100);
+		}
+		
+		public void RecordSalsa(GameObject obj)
+		{
+			audioSource = obj.GetComponent<SalsaMicInput>().audioSrc;
+			audioSource.clip = obj.GetComponent<SalsaMicInput>().audioSrc.clip;
 		}
 		
 		public void Play(string fileName)
