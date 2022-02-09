@@ -7,12 +7,23 @@ using UMA.CharacterSystem;
 
 public class LoadCharacter : MonoBehaviour
 {
-	public DynamicCharacterAvatar avatar;
+	public DynamicCharacterAvatar avatarA;
+	public DynamicCharacterAvatar avatarB;
+	
 	public GameObject avatarToScale;
     // Start is called before the first frame update
     void Start()
     {
-        //RpcLoad();
+	//Debug.Log("TERAZ SA NACITALA SCENA S PARAMETROM: "+MainMenu.info);
+		
+    string filename = Path.Combine(Application.streamingAssetsPath, "character" + ".txt");
+	StreamReader reader = new StreamReader(filename);
+	string x = reader.ReadToEnd();
+	reader.Close();
+
+	//avatarToScale.GetComponent<DynamicCharacterAvatar>().LoadFromRecipeString(x);
+	avatarA.LoadFromRecipeString(x);
+	avatarB.LoadFromRecipeString(x);
     }
 
     // Update is called once per frame

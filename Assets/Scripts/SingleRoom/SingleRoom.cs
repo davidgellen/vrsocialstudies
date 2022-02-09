@@ -77,12 +77,23 @@ public class SingleRoom : MonoBehaviour
 	
     void Start()
     {
-        Debug.Log("TERAZ SA NACITALA SCENA S PARAMETROM: "+MainMenu.info);
+        Debug.Log("TERAZ SA NACITALA SCENA S PARAMETROM: "+MainMenuParam.param);
 		//loadCharacterParameters();
 		isCrying = false;
 		recordStuff();
 		
-		this.gameObject.AddComponent<Sebasucit>();
+		
+		if(MainMenuParam.param == 1) 	// sebasucit
+		{
+			this.gameObject.AddComponent<Sebasucit>();
+		}
+		else 							// sebaprotekcia
+		{
+			this.gameObject.AddComponent<Sebaprotekcia>();
+		}
+		
+		
+
     }
 	
 	
@@ -182,6 +193,30 @@ public class SingleRoom : MonoBehaviour
 		
 		avatarToSitOnB.transform.position = seatPositionB;
 		avatarToSitOnB.transform.rotation = seatRotationB;
+	}
+	protected void changeColor(GameObject attacker, GameObject deffender)
+	{
+		Color color_attacker = Color.red;
+		Color color_deffender = Color.red;
+		
+		
+		if(MainMenuParam.param == 1) // sebasucit
+		{
+			color_attacker = Color.black;
+			color_deffender = Color.green;
+		}
+		else 					// sebaprotekcia
+		{
+			color_attacker = Color.blue;
+			color_deffender = Color.black;
+		}
+		
+		
+		attacker.GetComponent<DynamicCharacterAvatar>().SetColor("Shirt", color_attacker);
+		attacker.GetComponent<DynamicCharacterAvatar>().BuildCharacter();
+		
+		deffender.GetComponent<DynamicCharacterAvatar>().SetColor("Shirt", color_deffender);
+		deffender.GetComponent<DynamicCharacterAvatar>().BuildCharacter();
 	}
 	protected void loadCharacterParameters()
 	{

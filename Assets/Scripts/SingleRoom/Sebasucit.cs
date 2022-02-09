@@ -87,6 +87,9 @@ public class Sebasucit : SingleRoom
 	/* ----------------------- funkcie jednotlivych faz ----------------------- */
 	void phase1_start()
 	{
+		// zmen farby
+		changeColor(avatar, agent);
+		
 		// vypnutie fyziky
 		avatar.GetComponent<Rigidbody>().isKinematic = true;
 		agent.GetComponent<Rigidbody>().isKinematic = true;
@@ -159,6 +162,7 @@ public class Sebasucit : SingleRoom
 	*/
 	void phase2_start()
 	{
+		
 		makeSeat(agent, avatar);
 		
 		Debug.Log("SAVING & PLAYING");
@@ -184,6 +188,7 @@ public class Sebasucit : SingleRoom
 	*/
 	void phase3_start()
 	{
+		
 		resetAddTime();
 		wordcount = 0;
 		

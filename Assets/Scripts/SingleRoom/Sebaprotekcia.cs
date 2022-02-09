@@ -1,6 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UMA;
+using UMA.CharacterSystem;
+
+/*
+	ROZDIELY OPROTI SEBASUCIT
+	FAZA:
+		1: žiadny rozdiel
+		2: žiadny rozdiel
+		3: žiadny rozdiel, len spusti iné 3 animácie
+		4: žiadny rozdiel
+		
+		presádzanie!
+		na začiatku 2. fázy presaď participanta, na začiatku 3. bude sedieť na rovnakom mieste ako v 2. fáze a až na 4. fázu ich presaď na pôvodoné miesta
+*/
 
 public class Sebaprotekcia : SingleRoom
 {
@@ -10,7 +24,6 @@ public class Sebaprotekcia : SingleRoom
     void Start()
     {
         Debug.Log("Sebaprotekcia.cs");
-		
 		
 		srm = GameObject.Find("SingleRoomManager").GetComponent<SingleRoom>();
 		avatar = srm.avatar;
@@ -29,32 +42,40 @@ public class Sebaprotekcia : SingleRoom
 		seatRotationA = srm.seatRotationA;
 		seatRotationB = srm.seatRotationB;
 		
-		
 		phase = 1;
 		time = 0;
 		isRecording = false;
 		
-		seatPositionA = avatar.transform.position;
-		seatPositionB = agent.transform.position;
-		seatRotationA = avatar.transform.rotation;
-		seatRotationB = agent.transform.rotation;
-		
 		phase1_start();
     }
+	
+	void resetAddTime()
+	{
+		srm.timeAdded = 0;
+		timeAdded = 0;
+	}
 
     void Update()
     {
         this.time = this.time + Time.deltaTime;
+		this.timeAdded = srm.timeAdded;	 // ziskaj z srm timeAdded
+		srm.phase = this.phase;			 // informuj srm o aktualnej faze
 		
-		// nie moc efektivne riesenie
-		time += wordcount;
-		wordcount = 0;
-		
-		if(time > DEFAULT_PHASE_LENGTH) // nadišiel čas zmeniť fazu
+		if(time + timeAdded > DEFAULT_PHASE_LENGTH) // nadišiel čas zmeniť fazu
 		{
-			time = 0;
+			Debug.Log("Prepinam z fazy "+phase+" ktorej sa pridal cas: "+timeAdded+"; nova faza je: "+(phase+1) );
+
+			//prepla sa faza
 			phase++;
-			Debug.Log("Prepinam fazu, nova faza je: "+phase);
+			time = 0;
+			
+			// ak je nova faza 2 alebo 4 skrat ich cas
+			/*
+			if(phase == 2 || phase == 4)
+			{
+				phase_length = DEFAULT_PHASE_LENGTH - timeAdded;
+			}
+			*/
 			
 			// jednorazove zapnutie funckie dalsej fazy
 			switch(phase)
@@ -76,9 +97,16 @@ public class Sebaprotekcia : SingleRoom
 		}
     }
 	
+	
 	/* ----------------------- funkcie jednotlivych faz ----------------------- */
 	void phase1_start()
 	{
+		// zmen farby
+		changeColor(avatar, agent);
+		
+		// vypnutie fyziky
+		avatar.GetComponent<Rigidbody>().isKinematic = true;
+		agent.GetComponent<Rigidbody>().isKinematic = true;
 	}
 	void phase1()
 	{
@@ -88,39 +116,58 @@ public class Sebaprotekcia : SingleRoom
 			isRecording = true;
 			scmanager.soundManager.Record();
 			scmanager.motionManager.Record();
-			
-			// vypnutie fyziky
+		}
+		
+		if(time > 0.1 && time < 3)
+		{
 			avatar.GetComponent<Rigidbody>().isKinematic = true;
-			agent.GetComponent<Rigidbody>().isKinematic = true;
+			agent.GetComponent<Rigidbody>().isKinematic = true;	
+			
+			/* nadvihnutie do spravnej vysky */
+			avatar.transform.position = new Vector3(avatar.transform.position.x, 0.185f, avatar.transform.position.z);
+			agent.transform.position = new Vector3(0.3645f, 0.185f, 0.8694555f);
+			
+			/* fix placu odrazajuceho sa od tela */
+			agent.GetComponent<CapsuleCollider>().enabled = false;
+			
+			/* az teraz */
+			seatPositionA = avatar.transform.position;
+			seatPositionB = agent.transform.position;
+			seatRotationA = avatar.transform.rotation;
+			seatRotationB = agent.transform.rotation;
 		}
 		
 		// anstate
-		if(time < 30)
+		if(time + timeAdded < 1*DEFAULT_PHASE_LENGTH/4)
 		{
 			Debug.Log("anstate 1");
 			agent.GetComponent<Animator>().runtimeAnimatorController = animatorControllerPhase1_1;
+			agent.GetComponent<Animator>().SetInteger("anstate", 1);
 			agent.GetComponent<Animator>().avatar = animatorAvatar1;
 		}
-		else if(time < 60)
+		else if(time + timeAdded < 2*DEFAULT_PHASE_LENGTH/4)
 		{
 			Debug.Log("anstate 2");
-			agent.GetComponent<Animator>().runtimeAnimatorController = animatorControllerPhase1_2;
+			//agent.GetComponent<Animator>().runtimeAnimatorController = animatorControllerPhase1_2;
+			agent.GetComponent<Animator>().SetInteger("anstate", 2);
 			agent.GetComponent<Animator>().avatar = animatorAvatar1;
 		}
-		else if(time < 90)
+		else if(time + timeAdded < 3*DEFAULT_PHASE_LENGTH/4)
 		{
 			Debug.Log("anstate 3");
-			agent.GetComponent<Animator>().runtimeAnimatorController = animatorControllerPhase1_3;
+			//agent.GetComponent<Animator>().runtimeAnimatorController = animatorControllerPhase1_3;
+			agent.GetComponent<Animator>().SetInteger("anstate", 3);
 			agent.GetComponent<Animator>().avatar = animatorAvatar1;
 		}
-		else
+		else if(time + timeAdded < 4*DEFAULT_PHASE_LENGTH/4)
 		{
 			Debug.Log("anstate 4");
-			agent.GetComponent<Animator>().runtimeAnimatorController = animatorControllerPhase1_4;
+			agent.GetComponent<Animator>().SetInteger("anstate", 4);
+			//agent.GetComponent<Animator>().runtimeAnimatorController = animatorControllerPhase1_4;
 			agent.GetComponent<Animator>().avatar = animatorAvatar1;
 		}
 		
-		changeAvatarScale(agent, false);
+		//changeAvatarScale(agent, false);
 	}
 	
 	/*
@@ -129,7 +176,8 @@ public class Sebaprotekcia : SingleRoom
 	*/
 	void phase2_start()
 	{
-		//makeSeat(avatar, avatarA);
+		
+		makeSeat(agent, avatar);
 		
 		Debug.Log("SAVING & PLAYING");
 		
@@ -144,7 +192,7 @@ public class Sebaprotekcia : SingleRoom
 	}
 	void phase2()
 	{
-		changeAvatarScale(avatar, true);
+		//changeAvatarScale(avatar, true);
 	}
 	
 	/*
@@ -154,41 +202,58 @@ public class Sebaprotekcia : SingleRoom
 	*/
 	void phase3_start()
 	{
-		//makeSeat(avatarA, avatar);
+		
+		resetAddTime();
+		wordcount = 0;
+		
+		// v tejto faze zostanu sediet rovnako ako v 2. faze
+		//makeSeat(avatar, agent);
 		
 		scmanager.soundManager.Record();
 		
-		scmanager.motionManager.Reset();
+		//scmanager.motionManager.Reset();
 		scmanager.motionManager.Record();
 		agent.GetComponent<Animator>().enabled = true;
 		
-		changeAvatarScaleFixed(agent, false);
+		//changeAvatarScaleFixed(agent, false);
 	}
 
 	void phase3()
 	{
-		if(time < 30)
+		if(time + timeAdded < 1*DEFAULT_PHASE_LENGTH/3)
 		{
 			Debug.Log("anstate 1");
-			agent.GetComponent<Animator>().runtimeAnimatorController = animatorControllerPhase3_1;
+			agent.GetComponent<Animator>().runtimeAnimatorController = animatorControllerPhase3_2;
+			agent.GetComponent<Animator>().SetInteger("anstate", 1);
 			agent.GetComponent<Animator>().avatar = animatorAvatar1;
+			
+			// zapnutie slz
+			srm.isCrying = true;
 		}
-		else if(time < 60)
+		else if(time + timeAdded < 2*DEFAULT_PHASE_LENGTH/3)
 		{
 			Debug.Log("anstate 2");
-			agent.GetComponent<Animator>().runtimeAnimatorController = animatorControllerPhase3_2;
+			//agent.GetComponent<Animator>().runtimeAnimatorController = animatorControllerPhase3_2;
+			agent.GetComponent<Animator>().SetInteger("anstate", 2);
 			agent.GetComponent<Animator>().avatar = animatorAvatar1;
+			
+			// vypnutie slz
+			srm.isCrying = false;
 		}
-		else if(time < 90)
+		else if(time + timeAdded < 3*DEFAULT_PHASE_LENGTH/3)
 		{
 			Debug.Log("anstate 3");
-			agent.GetComponent<Animator>().runtimeAnimatorController = animatorControllerPhase3_3;
+			//agent.GetComponent<Animator>().runtimeAnimatorController = animatorControllerPhase3_3;
+			agent.GetComponent<Animator>().SetInteger("anstate", 3);
 			agent.GetComponent<Animator>().avatar = animatorAvatar1;
 		}
-		else
+		/*
+		else if(time + timeAdded < 4*DEFAULT_PHASE_LENGTH/4)
 		{
 			Debug.Log("anstate 4");
+			//?
 		}
+		*/
 	}
 	
 	/*
@@ -197,18 +262,25 @@ public class Sebaprotekcia : SingleRoom
 	*/
 	void phase4_start()
 	{
-		//makeSeat(avatar, avatarA);
-	
+
 		Debug.Log("SAVING & PLAYING");
-		scmanager.soundManager.Save("sound");
-		scmanager.motionManager.Save("motion");
+		scmanager.soundManager.Save("sound2");
+		scmanager.motionManager.Save("motion2");
 		
 		agent.GetComponent<Animator>().enabled = false;
 		
-		scmanager.soundManager.Play("sound");
-		scmanager.motionManager.Play("motion");
+		scmanager.soundManager.Play("sound2");
+		scmanager.motionManager.Play("motion2");
+		scmanager.motionManager.Play("motion2");
 		
-		resetAvatarScale(agent);
+		// posad ich na povodne miesta
+		makeSeat(avatar, agent);
+		
+		// motion bugfix
+		scmanager.motionManager.loader.loadAnimation();
+		scmanager.motionManager.loader.anim.Play("motion2");
+		
+		//resetAvatarScale(agent);
 	}
 	void phase4()
 	{}

@@ -1,7 +1,3 @@
-/*
-	motionscript nemodifikuje component Animator, len vytvori a prida novu animaciu 
-	cize treba vypnut component Animator az nasledne prehrat zachytenu animaciu
-*/
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,6 +5,9 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine.Windows.Speech;
 using System.Collections;
+using System.IO;
+using UMA;
+using UMA.CharacterSystem;
 
 public class VoiceRecognition : MonoBehaviour
 {
@@ -218,10 +217,28 @@ public class VoiceRecognition : MonoBehaviour
 	- agent sa bude postupom casu zmensovat
 */
 void phase1_start()
-{}
+{
+	string filename = Path.Combine(Application.streamingAssetsPath, "character" + ".txt");
+	StreamReader reader = new StreamReader(filename);
+	string x = reader.ReadToEnd();
+	reader.Close();
+	
+	//UMATextRecipe recipe = ScriptableObject.CreateInstance<UMATextRecipe>();
+   // recipe.Load(x, avatar.GetComponent<DynamicCharacterAvatar>().context);
+	
+	
+	avatar.GetComponent<DynamicCharacterAvatar>().LoadFromRecipeString(x);
+	//ImportSettings(UMATextRecipe.PackedLoadDCS(avatar.context, x));
+	//UMATextRecipe.PackedLoadDCS(avatar.GetComponent<DynamicCharacterAvatar>().context, x)
+}
 
 void phase1()
 {
+	/* test */
+	//UMATextRecipe asset = ScriptableObject.CreateInstance();
+	
+
+	
 	// zapnutie nahravania zvuku a pohybu
 	if(isRecording == false)
 	{
