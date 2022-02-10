@@ -1,6 +1,5 @@
 {
   "dependencies": {
-<<<<<<< HEAD
     "com.htc.upm.vive-input-utility": {
       "version": "1.13.4",
       "depth": 0,
@@ -15,8 +14,6 @@
       "dependencies": {},
       "url": "https://npm-registry.vive.com"
     },
-=======
->>>>>>> tomas/sebasucit_sebakritika
     "com.unity.animation.rigging": {
       "version": "1.0.3",
       "depth": 0,
@@ -101,8 +98,6 @@
     },
     "com.unity.mathematics": {
       "version": "1.2.1",
-<<<<<<< HEAD
-=======
       "depth": 1,
       "source": "registry",
       "dependencies": {},
@@ -129,7 +124,6 @@
     },
     "com.unity.searcher": {
       "version": "4.3.2",
->>>>>>> tomas/sebasucit_sebakritika
       "depth": 2,
       "source": "registry",
       "dependencies": {},
@@ -307,11 +301,7 @@
       "url": "https://packages.unity.com"
     },
     "com.valvesoftware.unity.openvr": {
-<<<<<<< HEAD
       "version": "file:D:/TP 2021-22/vrsocstud/com.valvesoftware.unity.openvr-1.1.4.tgz",
-=======
-      "version": "file:../Assets/SteamVR/OpenVRUnityXRPackage/Editor/com.valvesoftware.unity.openvr-1.1.4.tgz",
->>>>>>> tomas/sebasucit_sebakritika
       "depth": 0,
       "source": "local-tarball",
       "dependencies": {
