@@ -15,10 +15,18 @@ public class MainMenu : MonoBehaviour
         SceneManager.LoadScene(3);
     }
 
+	public void StartTestCompassion()
+	{
+		MainMenuParam.param = 1;
+		SceneManager.LoadScene(4);
+	}
+
     public void StartTestSelfSufficiency()
     {
+		MainMenuParam.param = 2;
         SceneManager.LoadScene(4);
     }
+	
 
     public void StartTestObesity()
     {
