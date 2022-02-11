@@ -79,6 +79,10 @@ public class SingleRoom : MonoBehaviour
 	private float waitTime1 = 5.0f;
 	private float waitTime2 = 4.0f;
 	
+	// button
+	public ButtonClick button;
+	public GameObject buttonWhole;
+	
     void Start()
     {
         Debug.Log("TERAZ SA NACITALA SCENA S PARAMETROM: "+MainMenuParam.param);

@@ -6,6 +6,7 @@ public class Sebasucit : SingleRoom
 {
 	private bool isRecording;
 	public SingleRoom srm;
+	public bool isPhaseStopped = true;
 	
     void Start()
     {
@@ -35,6 +36,9 @@ public class Sebasucit : SingleRoom
 		time = 0;
 		isRecording = false;
 		
+		button = srm.button;
+		buttonWhole = srm.buttonWhole;
+		
 		phase1_start();
     }
 	
@@ -46,43 +50,61 @@ public class Sebasucit : SingleRoom
 
     void Update()
     {
-        this.time = this.time + Time.deltaTime;
+		if(phase == 1)
+		{
+			if(button.isClicked == true)
+			{
+				isPhaseStopped = false;
+				phaseUnpause();
+			}
+		}
+		
+		if(!isPhaseStopped)
+		{
+			this.time = this.time + Time.deltaTime;
+		}
+		
 		this.timeAdded = srm.timeAdded;	 // ziskaj z srm timeAdded
 		srm.phase = this.phase;			 // informuj srm o aktualnej faze
 		
 		if(time + timeAdded > DEFAULT_PHASE_LENGTH) // nadišiel čas zmeniť fazu
 		{
-			Debug.Log("Prepinam z fazy "+phase+" ktorej sa pridal cas: "+timeAdded+"; nova faza je: "+(phase+1) );
+			isPhaseStopped = !isButtonClicked();
+			
+			if( !isPhaseStopped )
+			{
+				Debug.Log("Prepinam z fazy "+phase+" ktorej sa pridal cas: "+timeAdded+"; nova faza je: "+(phase+1) );
+				phaseUnpause(); // faza sa odpauzla
 
-			//prepla sa faza
-			phase++;
-			time = 0;
-			
-			// ak je nova faza 2 alebo 4 skrat ich cas
-			/*
-			if(phase == 2 || phase == 4)
-			{
-				phase_length = DEFAULT_PHASE_LENGTH - timeAdded;
+				//prepla sa faza
+				phase++;
+				time = 0;
+				
+				// jednorazove zapnutie funckie dalsej fazy
+				switch(phase)
+				{
+					case 2: phase2_start(); break;
+					case 3: phase3_start(); break;
+					case 4: phase4_start(); break;
+					default: phaseEndOfExperiment_start(); break;
+				}
 			}
-			*/
-			
-			// jednorazove zapnutie funckie dalsej fazy
-			switch(phase)
+			else // faza je pauznuta, zviditelni tlacidlo a skumaj jeho stav
 			{
-				case 2: phase2_start(); break;
-				case 3: phase3_start(); break;
-				case 4: phase4_start(); break;
-				default: phaseEndOfExperiment_start(); break;
+				phasePause();
 			}
 		}
 		
-		// periodicke vykonavanie kodu ktory prislucha momentalnej faze
-		switch(phase)
+		// periodicke vykonavanie kodu ktory prislucha momentalnej faze, ak nie je faza pozastavena
+		if(!isPhaseStopped)
 		{
-			case 1: phase1(); break;
-			case 2: phase2(); break;
-			case 3: phase3(); break;
-			case 4: phase4(); break;
+			switch(phase)
+			{
+				case 1: phase1(); break;
+				case 2: phase2(); break;
+				case 3: phase3(); break;
+				case 4: phase4(); break;
+			}	
 		}
     }
 	
@@ -117,7 +139,7 @@ public class Sebasucit : SingleRoom
 			
 			/* nadvihnutie do spravnej vysky */
 			//avatar.transform.position = new Vector3(avatar.transform.position.x, 0.185f, avatar.transform.position.z);
-			agent.transform.position = new Vector3(0.3645f, 0.185f, 0.8694555f);
+			//agent.transform.position = new Vector3(0.3645f, 0.185f, 0.8694555f);
 			
 			/* fix placu odrazajuceho sa od tela */
 			agent.GetComponent<CapsuleCollider>().enabled = false;
@@ -164,7 +186,7 @@ public class Sebasucit : SingleRoom
 			agent.GetComponent<Animator>().avatar = animatorAvatar1;
 		}
 		
-		//changeAvatarScale(agent, false);
+		changeAvatarScale(agent, false);
 	}
 	
 	/*
@@ -189,7 +211,7 @@ public class Sebasucit : SingleRoom
 	}
 	void phase2()
 	{
-		//changeAvatarScale(avatar, true);
+		changeAvatarScale(avatar, true);
 	}
 	
 	/*
@@ -211,7 +233,7 @@ public class Sebasucit : SingleRoom
 		scmanager.motionManager.Record();
 		agent.GetComponent<Animator>().enabled = true;
 		
-		//changeAvatarScaleFixed(agent, false);
+		changeAvatarScaleFixed(agent, false);
 	}
 
 	void phase3()
@@ -279,4 +301,27 @@ public class Sebasucit : SingleRoom
 	*/
 	void phaseEndOfExperiment_start()
 	{}
+	
+	bool isButtonClicked()
+	{
+		if(button.isClicked)
+		return true;
+		else
+		return false;
+	}
+	
+	
+	/* --------- tlacidlo --------- */
+	void phasePause()
+	{
+		//buttonWhole.SetActive(true);
+		buttonWhole.transform.localScale = new Vector3(1, 1, 1);
+		agent.SetActive(false);
+	}
+	void phaseUnpause()
+	{
+		//buttonWhole.SetActive(false);
+		buttonWhole.transform.localScale = new Vector3(0, 0, 0);
+		agent.SetActive(true);
+	}
 }
