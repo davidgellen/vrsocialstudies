@@ -28,6 +28,9 @@ public class Sebasucit : SingleRoom
 		seatRotationA = srm.seatRotationA;
 		seatRotationB = srm.seatRotationB;
 		
+		seatA = srm.seatA;
+		seatB = srm.seatB;
+		
 		phase = 1;
 		time = 0;
 		isRecording = false;
@@ -91,8 +94,11 @@ public class Sebasucit : SingleRoom
 		changeColor(avatar, agent);
 		
 		// vypnutie fyziky
-		avatar.GetComponent<Rigidbody>().isKinematic = true;
+		//avatar.GetComponent<Rigidbody>().isKinematic = true;
 		agent.GetComponent<Rigidbody>().isKinematic = true;
+		
+		//agent.GetComponent<CapsuleCollider>().enabled = false;
+		//agent.GetComponent<Rigidbody>().enabled = false;
 	}
 	void phase1()
 	{
@@ -106,11 +112,11 @@ public class Sebasucit : SingleRoom
 		
 		if(time > 0.1 && time < 3)
 		{
-			avatar.GetComponent<Rigidbody>().isKinematic = true;
+			//avatar.GetComponent<Rigidbody>().isKinematic = true;
 			agent.GetComponent<Rigidbody>().isKinematic = true;	
 			
 			/* nadvihnutie do spravnej vysky */
-			avatar.transform.position = new Vector3(avatar.transform.position.x, 0.185f, avatar.transform.position.z);
+			//avatar.transform.position = new Vector3(avatar.transform.position.x, 0.185f, avatar.transform.position.z);
 			agent.transform.position = new Vector3(0.3645f, 0.185f, 0.8694555f);
 			
 			/* fix placu odrazajuceho sa od tela */
@@ -121,6 +127,11 @@ public class Sebasucit : SingleRoom
 			seatPositionB = agent.transform.position;
 			seatRotationA = avatar.transform.rotation;
 			seatRotationB = agent.transform.rotation;
+			
+			
+			// fyzika fix
+			agent.GetComponent<Rigidbody>().isKinematic = true;
+			agent.GetComponent<CapsuleCollider>().enabled = false;
 		}
 		
 		// anstate

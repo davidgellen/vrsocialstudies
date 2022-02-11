@@ -49,6 +49,10 @@ public class SingleRoom : MonoBehaviour
 	public RuntimeAnimatorController animatorControllerPhase3_2;
 	public RuntimeAnimatorController animatorControllerPhase3_3;
 	public Avatar animatorAvatar1;
+	
+	// fix
+	public GameObject seatA;
+	public GameObject seatB;
 
 	// zaznam a reprodukcia pohybu a zvuku
 	public ScManager scmanager;
@@ -188,11 +192,18 @@ public class SingleRoom : MonoBehaviour
 	}
 	protected void makeSeat(GameObject avatarToSitOnA, GameObject avatarToSitOnB)
 	{
+		/*
 		avatarToSitOnA.transform.position = seatPositionA;
 		avatarToSitOnA.transform.rotation = seatRotationA;
 		
 		avatarToSitOnB.transform.position = seatPositionB;
 		avatarToSitOnB.transform.rotation = seatRotationB;
+		*/
+		avatarToSitOnA.transform.position = seatA.transform.position;
+		avatarToSitOnA.transform.rotation = seatA.transform.rotation;
+		
+		avatarToSitOnB.transform.position = seatB.transform.position;
+		avatarToSitOnB.transform.rotation = seatB.transform.rotation;
 	}
 	protected void changeColor(GameObject attacker, GameObject deffender)
 	{
