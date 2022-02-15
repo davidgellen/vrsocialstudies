@@ -39,6 +39,7 @@ public class Hand : MonoBehaviour
         var rotationWithOffset = _followTarget.rotation * Quaternion.Euler(rotationOffset);
         var q = rotationWithOffset * Quaternion.Inverse(_body.rotation);
         q.ToAngleAxis(out float angle, out Vector3 axis);
+        //transform.eulerAngles = axis;
         _body.angularVelocity = axis * (angle * Mathf.Deg2Rad * rotateSpeed);
     }
 }
