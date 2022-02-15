@@ -9,9 +9,10 @@ public class CopyTransform : MonoBehaviour
     [SerializeField] float rotationOffsetX;
     [SerializeField] float rotationOffsetY;
     [SerializeField] float rotationOffsetZ;
-    [SerializeField] float positionOffsetX;
-    [SerializeField] float positionOffsetY;
-    [SerializeField] float positionOffsetZ;
+    //[SerializeField] float positionOffsetX;
+    //[SerializeField] float positionOffsetY;
+    //[SerializeField] float positionOffsetZ;
+    [SerializeField] Vector3 positionOffset;
     [SerializeField] bool invertXrotation = false;
     [SerializeField] bool invertYrotation = false;
     [SerializeField] bool invertZrotation = false;
@@ -25,8 +26,9 @@ public class CopyTransform : MonoBehaviour
     void Update()
     {
         Vector3 newRotation = new Vector3((sourceObject.transform.eulerAngles.x + rotationOffsetX) * (invertXrotation ? -1 : 1), (sourceObject.transform.eulerAngles.y + rotationOffsetY) * (invertYrotation ? -1 : 1), (sourceObject.transform.eulerAngles.z + rotationOffsetZ) * (invertZrotation ? -1 : 1));
-        Vector3 newPosition = new Vector3(sourceObject.transform.position.x + positionOffsetX, sourceObject.transform.position.y + positionOffsetY, sourceObject.transform.position.z + positionOffsetZ);
+        //Vector3 newPosition = new Vector3(sourceObject.transform.position.x + positionOffsetX, sourceObject.transform.position.y + positionOffsetY, sourceObject.transform.position.z + positionOffsetZ);
         destinationObject.transform.eulerAngles = newRotation;
-        destinationObject.transform.position = newPosition;
+        //destinationObject.transform.position = newPosition;
+        destinationObject.transform.position = sourceObject.transform.position + sourceObject.transform.TransformDirection(positionOffset);
     }
 }
