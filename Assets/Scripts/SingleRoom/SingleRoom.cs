@@ -112,7 +112,7 @@ public class SingleRoom : MonoBehaviour
         {
 			int count = text.Split(' ').Length;
 			wordcount = wordcount + count;
-            Debug.LogFormat("Dictation result: {0} => length = {1}, wordcount = {2}", text, count, wordcount);
+          //Debug.LogFormat("Dictation result: {0} => length = {1}, wordcount = {2}", text, count, wordcount);
             //m_Recognitions.text += text + "\n";
         };
 

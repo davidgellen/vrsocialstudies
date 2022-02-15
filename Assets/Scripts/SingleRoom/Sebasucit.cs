@@ -132,7 +132,7 @@ public class Sebasucit : SingleRoom
 		if(isRecording == false)
 		{
 			isRecording = true;
-			scmanager.soundManager.Record();
+			scmanager.soundManager.RecordSalsa(avatar);
 			scmanager.motionManager.Record();
 		}
 		
@@ -204,12 +204,12 @@ public class Sebasucit : SingleRoom
 		agent.GetComponent<Animator>().enabled = false;
 		
 		
-		//
+		/*
 		agent.GetComponent<Salsa>().audioSrc.Stop();
     string filename = Path.Combine(Application.dataPath, "Scripts", "SingleRoom", "sound.wav");
      /*var www = new WWW(filename);
      Debug.Log(www);
-     AudioClip clip = www.GetAudioClip(true, false, AudioType.WAV);*/
+     AudioClip clip = www.GetAudioClip(true, false, AudioType.WAV);
      Debug.Log(filename);
      AudioClip clip = await LoadAudioClip(filename);
      if (clip != null){
@@ -220,7 +220,7 @@ public class Sebasucit : SingleRoom
      else{
          Debug.Log("je to null");
       }
-		//
+		*/
 		
 		
 		scmanager.soundManager.Play("sound");
@@ -244,7 +244,7 @@ public class Sebasucit : SingleRoom
 		
 		makeSeat(avatar, agent);
 		
-		scmanager.soundManager.Record();
+		scmanager.soundManager.RecordSalsa(avatar);
 		
 		scmanager.motionManager.Reset();
 		scmanager.motionManager.Record();
