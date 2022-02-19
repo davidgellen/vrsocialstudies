@@ -1,0 +1,16 @@
+Salsa Lipsync
+
+lipsync z nahravky:
+=> PRED nastavenim salsy -> V komponente Animator -> Controller nesmie byt None!!
+=> Na avatara GameObject -> CrazyMinnowStudios -> Salsa -> OneClick UMA
+=> V komponente Eyes -> Head Configuration -> DISABLE processing
+=> V komponente AudioSource -> DISABLE PlayOnAwake
+=> script Sebasucit.cs -> funkcie pre jendotlive fazy
+=> Cesta k zvukovej nahravke nesmie byt v Assets/StreamingAssets (SoundManager.cs)
+
+lipsync z mic inputu (NOT FINAL INSTRUCTIONS):
+=> PRED nastavenim salsy -> V komponente Animator -> Controller nesmie byt None!!
+=> Na avatara GameObject -> CrazyMinnowStudios -> Salsa -> OneClick UMA
+=> V komponente Eyes -> Head Configuration -> DISABLE processing
+=> V avatarovi pridat component SalsaMicInput -> ENABLE Link with salsa, ENABLE Override samplerate
+=> script Sebasucit.cs -> funkcie pre jendotlive fazy
