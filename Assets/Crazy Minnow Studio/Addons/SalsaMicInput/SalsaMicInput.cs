@@ -211,6 +211,8 @@ namespace CrazyMinnow.SALSA
 
 		public void StopMicrophone(string mic = null)
 		{
+			Debug.Log("StopMicrophone()");
+			
 			if ( audioSrc && isWiredUp )
 			{
 				// Stop the AudioSource.
@@ -351,7 +353,11 @@ namespace CrazyMinnow.SALSA
 			else
 				loopLength = 3;
 
-			audioSrc.clip = Microphone.Start(mic, true, loopLength, sampleRate);
+
+			Debug.Log("looplength: " + loopLength);
+			//audioSrc.clip = Microphone.Start(mic, true, loopLength, sampleRate);
+			audioSrc.clip = Microphone.Start(mic, true, 33, sampleRate);
+
 
 			// Let the Microphone start filling the buffer prior to activating the AudioSource.
 			while ( !( Microphone.GetPosition(mic) > 0 ) )

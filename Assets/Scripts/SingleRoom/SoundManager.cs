@@ -27,6 +27,9 @@ public class SoundManager : MonoBehaviour
 		{
 			audioSource = obj.GetComponent<SalsaMicInput>().audioSrc;
 			audioSource.clip = obj.GetComponent<SalsaMicInput>().audioSrc.clip;
+			
+			
+			//audioSource.clip.SetData(null, 0);
 		}
 		
 		public void Play(string fileName)
