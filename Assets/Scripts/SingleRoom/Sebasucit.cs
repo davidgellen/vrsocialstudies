@@ -8,9 +8,10 @@ public class Sebasucit : SingleRoom
 	public SingleRoom srm;
 	public bool isPhaseStopped = true;
 	public bool phaseTicket = false;
+	public bool savedAtEnd = false;
 	
 	private float timePause = 0;
-	public const float DELAY_TIME = 10.0f;
+	public const float DELAY_TIME = 20.0f;
 	
     void Start()
     {
@@ -64,6 +65,16 @@ public class Sebasucit : SingleRoom
 		{
 			Debug.Log("timePause = " + timePause);
 			this.timePause = this.timePause + Time.deltaTime;
+			isPhaseStopped = true;
+			
+			// ak skoncila 1. a 3. faza tak uloz motion a sound
+			if(phase == 1 && savedAtEnd == false || phase == 3 && savedAtEnd == false)
+			{
+				savedAtEnd = true;
+				scmanager.soundManager.Save("sound");
+				scmanager.motionManager.Save("motion");
+			}
+			
 			if (timePause > DELAY_TIME)
 			{
 				timePause = 0;
@@ -86,6 +97,7 @@ public class Sebasucit : SingleRoom
 			//prepla sa faza
 			phase++;
 			time = 0;
+			savedAtEnd = false;
 				
 			// jednorazove zapnutie funckie dalsej fazy
 			switch(phase)
@@ -198,20 +210,17 @@ public class Sebasucit : SingleRoom
 	*/
 	void phase2_start()
 	{
-		
 		//makeSeat(agent, avatar);
 		makeSeatPlayRecord(agent, avatar); // <-- test 21.2
 		
-		Debug.Log("SAVING & PLAYING");
-		
-		scmanager.soundManager.Save("sound");
-		scmanager.motionManager.Save("motion");
+		// uz sa to nemoze ukladat a prehravat na jednom mieste lebo je tam delay!
+		// najprv sa to musi ulozit a po delay prehrat
+		Debug.Log("PLAYING SAVED STUFF");
 		
 		agent.GetComponent<Animator>().enabled = false;
 		
 		scmanager.soundManager.Play("sound");
 		scmanager.motionManager.Play("motion");
-		
 	}
 	void phase2()
 	{
@@ -286,9 +295,11 @@ public class Sebasucit : SingleRoom
 	{
 		makeSeat(agent, avatar);
 	
+		/*
 		Debug.Log("SAVING & PLAYING");
 		scmanager.soundManager.Save("sound");
 		scmanager.motionManager.Save("motion");
+		*/
 		
 		agent.GetComponent<Animator>().enabled = false;
 		

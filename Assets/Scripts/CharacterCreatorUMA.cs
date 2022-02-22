@@ -4,6 +4,7 @@ using System.IO;
 using UnityEngine;
 using UMA;
 using UMA.CharacterSystem;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class CharacterCreatorUMA : MonoBehaviour
@@ -81,14 +82,44 @@ public class CharacterCreatorUMA : MonoBehaviour
 	
 	public void SwitchGender(bool male)
 	{
-		if(male && avatar.activeRace.name != "HumanMaleDCS")
+		if(male && avatar.activeRace.name != "HumanMaleHighPoly")
 		{
-			avatar.ChangeRace("HumanMaleDCS");
+			avatar.ChangeRace("HumanMaleHighPoly");
+			
+			// rovno aj oblecenie
+			avatar.ClearSlot("Hair");
+			avatar.SetSlot("Hair", "MaleHair2");
+			
+			avatar.ClearSlot("Chest");
+			avatar.SetSlot("Chest", "MaleHoodie_Recipe");
+			
+			avatar.ClearSlot("Legs");
+			avatar.SetSlot("Legs", "MaleSweatPants_Recipe");
+			
+			avatar.ClearSlot("Feet");
+			avatar.SetSlot("Feet", "TallShoes_Black_Recipe");
+			
+			avatar.BuildCharacter();
 		}
 		
-		if(!male && avatar.activeRace.name != "HumanFemaleDCS")
+		if(!male && avatar.activeRace.name != "HumanFemaleHighPoly")
 		{
-			avatar.ChangeRace("HumanFemaleDCS");
+			avatar.ChangeRace("HumanFemaleHighPoly");
+			
+			// rovno aj oblecenie
+			avatar.ClearSlot("Hair");
+			avatar.SetSlot("Hair", "FemaleHair2");
+			
+			avatar.ClearSlot("Chest");
+			avatar.SetSlot("Chest", "FemaleShirt2");
+			
+			avatar.ClearSlot("Legs");
+			avatar.SetSlot("Legs", "FemalePants1");
+			
+			avatar.ClearSlot("Feet");
+			avatar.SetSlot("Feet", "FemaleTallShoes_Turquoise");
+			
+			avatar.BuildCharacter();
 		}
 	}
 	
@@ -110,6 +141,9 @@ public class CharacterCreatorUMA : MonoBehaviour
         StreamWriter stream = File.CreateText(fileName);
         stream.WriteLine(characterParameters);
         stream.Close();
+        
+        // return to menu
+        SceneManager.LoadScene("Menu");
 	}
 	
 	

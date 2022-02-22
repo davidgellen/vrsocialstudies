@@ -44,7 +44,12 @@ public class MainMenu : MonoBehaviour
     {
         SceneManager.LoadScene(6);
     }
-    
+
+    public void StartCharacterCreatorUMA()
+    {
+        SceneManager.LoadScene("CharacterCreatorUMA");
+    }
+
     public void Quit()
     {
         Application.Quit();
