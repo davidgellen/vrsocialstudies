@@ -49,6 +49,8 @@ public class SingleRoom : MonoBehaviour
 	public RuntimeAnimatorController animatorControllerPhase3_2;
 	public RuntimeAnimatorController animatorControllerPhase3_3;
 	public Avatar animatorAvatar1;
+	public Avatar animatorAvatarFemale;
+	public Avatar animatorAvatarMale;
 	
 	// fix
 	public GameObject seatA;
@@ -233,6 +235,7 @@ public class SingleRoom : MonoBehaviour
 		}
 	}
 
+	
 	protected void changeColor(GameObject attacker, GameObject deffender)
 	{
 		Color color_attacker = Color.red;
@@ -251,10 +254,12 @@ public class SingleRoom : MonoBehaviour
 		
 		
 		attacker.GetComponent<DynamicCharacterAvatar>().SetColor("Shirt", color_attacker);
-		attacker.GetComponent<DynamicCharacterAvatar>().BuildCharacter();
+		attacker.GetComponent<DynamicCharacterAvatar>().UpdateColors(true);
+		//attacker.GetComponent<DynamicCharacterAvatar>().BuildCharacter();
 		
 		deffender.GetComponent<DynamicCharacterAvatar>().SetColor("Shirt", color_deffender);
-		deffender.GetComponent<DynamicCharacterAvatar>().BuildCharacter();
+		deffender.GetComponent<DynamicCharacterAvatar>().UpdateColors(true);
+		//deffender.GetComponent<DynamicCharacterAvatar>().BuildCharacter();
 	}
 	protected void loadCharacterParameters()
 	{
@@ -277,7 +282,7 @@ public class SingleRoom : MonoBehaviour
 			timer1 = 0.0f;
 			
 			GameObject obj1 = Instantiate(tear, tear1_position.transform.position, tear1_position.transform.rotation);
-			Destroy(obj1, 3);
+			Destroy(obj1, 0.5f);
 		}
 		if(timer2 >= waitTime2)
 		{
@@ -285,7 +290,7 @@ public class SingleRoom : MonoBehaviour
 			timer2 = 0.0f;
 			
 			GameObject obj2 = Instantiate(tear, tear2_position.transform.position, tear2_position.transform.rotation);
-			Destroy(obj2, 3);
+			Destroy(obj2, 0.5f);
 		}
 	}
 }

@@ -1,6 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
+using System.IO;
+using UnityEngine.Networking;
+using System.Threading.Tasks;
+using CrazyMinnow.SALSA;
+using UMA;
+using UMA.CharacterSystem;
 
 public class Sebasucit : SingleRoom
 {
@@ -12,6 +19,37 @@ public class Sebasucit : SingleRoom
 	
 	private float timePause = 0;
 	public const float DELAY_TIME = 20.0f;
+	
+	
+	// ------------------------------- lipsync
+	async Task<AudioClip> LoadAudioClip(string path){
+		AudioClip clip = null;
+
+		using (UnityWebRequest uwr = UnityWebRequestMultimedia.GetAudioClip(path, AudioType.WAV))
+		{
+			uwr.SendWebRequest();
+ 
+			// wrap tasks in try/catch, otherwise it'll fail silently
+			try
+			{
+				while (!uwr.isDone) await Task.Delay(5);
+ 
+				if (uwr.isNetworkError || uwr.isHttpError) Debug.Log($"{uwr.error}");
+				else
+				{
+					clip = DownloadHandlerAudioClip.GetContent(uwr);
+				}
+			}
+			catch (Exception err)
+			{
+				Debug.Log($"{err.Message}, {err.StackTrace}");
+			}
+		}
+ 
+		return clip;
+	}
+	// -------------------------------
+	
 	
     void Start()
     {
@@ -28,6 +66,9 @@ public class Sebasucit : SingleRoom
 		animatorControllerPhase3_2 = srm.animatorControllerPhase3_2;
 		animatorControllerPhase3_3 = srm.animatorControllerPhase3_3;
 		animatorAvatar1 = srm.animatorAvatar1;
+		animatorAvatarFemale = srm.animatorAvatarFemale;
+		animatorAvatarMale = srm.animatorAvatarMale;
+		
 		scmanager = srm.scmanager;
 		seatPositionA = srm.seatPositionA;
 		seatPositionB = srm.seatPositionB;
@@ -43,6 +84,19 @@ public class Sebasucit : SingleRoom
 		phase = 0;
 		time = 0;
 		isRecording = false;
+		
+		
+		/* -- animator podla pohlavia -- */
+		/*
+		if(agent.GetComponent<DynamicCharacterAvatar>().activeRace.name == "HumanFemaleHighPoly")
+		{
+			agent.GetComponent<Animator>().avatar = animatorAvatarFemale;
+		}
+		else
+		{
+			agent.GetComponent<Animator>().avatar = animatorAvatarMale;
+		}
+		*/
     }
 	
 	void resetAddTime()
@@ -128,7 +182,7 @@ public class Sebasucit : SingleRoom
 	void phase1_start()
 	{
 		// zmen farby
-		changeColor(avatar, agent);
+			//changeColor(avatar, agent);
 		
 		// vypnutie fyziky
 		//avatar.GetComponent<Rigidbody>().isKinematic = true;
@@ -177,28 +231,28 @@ public class Sebasucit : SingleRoom
 			Debug.Log("anstate 1");
 			agent.GetComponent<Animator>().runtimeAnimatorController = animatorControllerPhase1_1;
 			agent.GetComponent<Animator>().SetInteger("anstate", 1);
-			agent.GetComponent<Animator>().avatar = animatorAvatar1;
+				//agent.GetComponent<Animator>().avatar = animatorAvatar1;
 		}
 		else if(time + timeAdded < 2*DEFAULT_PHASE_LENGTH/4)
 		{
 			Debug.Log("anstate 2");
 			//agent.GetComponent<Animator>().runtimeAnimatorController = animatorControllerPhase1_2;
 			agent.GetComponent<Animator>().SetInteger("anstate", 2);
-			agent.GetComponent<Animator>().avatar = animatorAvatar1;
+				//agent.GetComponent<Animator>().avatar = animatorAvatar1;
 		}
 		else if(time + timeAdded < 3*DEFAULT_PHASE_LENGTH/4)
 		{
 			Debug.Log("anstate 3");
 			//agent.GetComponent<Animator>().runtimeAnimatorController = animatorControllerPhase1_3;
 			agent.GetComponent<Animator>().SetInteger("anstate", 3);
-			agent.GetComponent<Animator>().avatar = animatorAvatar1;
+				//agent.GetComponent<Animator>().avatar = animatorAvatar1;
 		}
 		else if(time + timeAdded < 4*DEFAULT_PHASE_LENGTH/4)
 		{
 			Debug.Log("anstate 4");
 			agent.GetComponent<Animator>().SetInteger("anstate", 4);
 			//agent.GetComponent<Animator>().runtimeAnimatorController = animatorControllerPhase1_4;
-			agent.GetComponent<Animator>().avatar = animatorAvatar1;
+				//agent.GetComponent<Animator>().avatar = animatorAvatar1;
 		}
 		
 		changeAvatarScale(agent, false);
@@ -208,7 +262,7 @@ public class Sebasucit : SingleRoom
 		dojde k presadeniu praticipanta a agenta
 		agent replikuje pohyb a zvuk participanta z fazy 1
 	*/
-	void phase2_start()
+	async void phase2_start()
 	{
 		//makeSeat(agent, avatar);
 		makeSeatPlayRecord(agent, avatar); // <-- test 21.2
@@ -216,10 +270,24 @@ public class Sebasucit : SingleRoom
 		// uz sa to nemoze ukladat a prehravat na jednom mieste lebo je tam delay!
 		// najprv sa to musi ulozit a po delay prehrat
 		Debug.Log("PLAYING SAVED STUFF");
-		
+
 		agent.GetComponent<Animator>().enabled = false;
 		
-		scmanager.soundManager.Play("sound");
+		// --------------------- lipsync (on file input)
+		agent.GetComponent<Salsa>().audioSrc.Stop();
+		string filename = Path.Combine(Application.dataPath, "Scripts", "SingleRoom", "sound.wav");
+		AudioClip clip = await LoadAudioClip(filename);
+		if (clip != null){
+			agent.GetComponent<AudioSource>().clip = clip;
+			Debug.Log(clip);
+			agent.GetComponent<Salsa>().audioSrc.Play();
+		}
+		else{
+			Debug.Log("je to null");
+		}
+		// -----------------------------------------------
+		
+		//scmanager.soundManager.Play("sound");
 		scmanager.motionManager.Play("motion");
 	}
 	void phase2()
@@ -256,7 +324,7 @@ public class Sebasucit : SingleRoom
 			Debug.Log("anstate 1");
 			agent.GetComponent<Animator>().runtimeAnimatorController = animatorControllerPhase3_1;
 			agent.GetComponent<Animator>().SetInteger("anstate", 1);
-			agent.GetComponent<Animator>().avatar = animatorAvatar1;
+				//agent.GetComponent<Animator>().avatar = animatorAvatar1;
 			
 			// zapnutie slz
 			srm.isCrying = true;
@@ -266,7 +334,7 @@ public class Sebasucit : SingleRoom
 			Debug.Log("anstate 2");
 			//agent.GetComponent<Animator>().runtimeAnimatorController = animatorControllerPhase3_2;
 			agent.GetComponent<Animator>().SetInteger("anstate", 2);
-			agent.GetComponent<Animator>().avatar = animatorAvatar1;
+				//agent.GetComponent<Animator>().avatar = animatorAvatar1;
 			
 			// vypnutie slz
 			srm.isCrying = false;
@@ -276,7 +344,7 @@ public class Sebasucit : SingleRoom
 			Debug.Log("anstate 3");
 			//agent.GetComponent<Animator>().runtimeAnimatorController = animatorControllerPhase3_3;
 			agent.GetComponent<Animator>().SetInteger("anstate", 3);
-			agent.GetComponent<Animator>().avatar = animatorAvatar1;
+				//agent.GetComponent<Animator>().avatar = animatorAvatar1;
 		}
 		/*
 		else if(time + timeAdded < 4*DEFAULT_PHASE_LENGTH/4)
@@ -291,7 +359,7 @@ public class Sebasucit : SingleRoom
 		dojde k presadeniu participanta a agenta
 		agent replikuje pohyb a zvuk participanta z fazy 3
 	*/
-	void phase4_start()
+	async void phase4_start()
 	{
 		makeSeat(agent, avatar);
 	
@@ -303,7 +371,21 @@ public class Sebasucit : SingleRoom
 		
 		agent.GetComponent<Animator>().enabled = false;
 		
-		scmanager.soundManager.Play("sound");
+		// --------------------- lipsync (on file input)
+		agent.GetComponent<Salsa>().audioSrc.Stop();
+		string filename = Path.Combine(Application.dataPath, "Scripts", "SingleRoom", "sound.wav");
+		AudioClip clip = await LoadAudioClip(filename);
+		if (clip != null){
+			agent.GetComponent<AudioSource>().clip = clip;
+			Debug.Log(clip);
+			agent.GetComponent<Salsa>().audioSrc.Play();
+		}
+		else{
+			Debug.Log("je to null");
+		}
+		// ---------------------------------------------
+		
+		//scmanager.soundManager.Play("sound");
 		scmanager.motionManager.Play("motion");
 		
 		resetAvatarScale(agent);
