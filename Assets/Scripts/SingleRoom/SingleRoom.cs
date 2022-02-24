@@ -31,7 +31,7 @@ public class SingleRoom : MonoBehaviour
 	public float timeAdded = 0; 						//kolko casu sa  pridalo kvoli rozpravaniu
 	
 	// misc
-	protected const float DEFAULT_PHASE_LENGTH = 40; 	// v sekundach
+	protected const float DEFAULT_PHASE_LENGTH = 60; 	// v sekundach
 	protected float phase_length = 120;
 	
 	public int phase;					  				// aktualna faza
@@ -49,10 +49,16 @@ public class SingleRoom : MonoBehaviour
 	public RuntimeAnimatorController animatorControllerPhase3_2;
 	public RuntimeAnimatorController animatorControllerPhase3_3;
 	public Avatar animatorAvatar1;
+	public Avatar animatorAvatarFemale;
+	public Avatar animatorAvatarMale;
 	
 	// fix
 	public GameObject seatA;
 	public GameObject seatB;
+	
+	//
+	public GameObject seatA_playrecord;
+	public GameObject seatB_playrecord;
 
 	// zaznam a reprodukcia pohybu a zvuku
 	public ScManager scmanager;
@@ -64,7 +70,7 @@ public class SingleRoom : MonoBehaviour
 	public Vector3 seatPositionB;
 	public Quaternion seatRotationA;
 	public Quaternion seatRotationB;
-
+	
 	// riadenie
 	public Sebasucit sebasucit;
 	public Sebaprotekcia sebaprotekcia;
@@ -86,21 +92,16 @@ public class SingleRoom : MonoBehaviour
 		isCrying = false;
 		recordStuff();
 		
-		
-		if(MainMenuParam.param == 1) 	// sebasucit
-		{
-			this.gameObject.AddComponent<Sebasucit>();
-		}
-		else 							// sebaprotekcia
+		if (MainMenuParam.param == 3)						// sebakritika
 		{
 			this.gameObject.AddComponent<Sebaprotekcia>();
 		}
-		
-		
-
+		else 												// sebasucit
+		{
+			this.gameObject.AddComponent<Sebasucit>();
+		}
     }
-	
-	
+    
     void Update()
     {
 		// nie moc efektivne riesenie
@@ -205,29 +206,60 @@ public class SingleRoom : MonoBehaviour
 		avatarToSitOnB.transform.position = seatB.transform.position;
 		avatarToSitOnB.transform.rotation = seatB.transform.rotation;
 	}
+	protected void makeSeatPlayRecord(GameObject avatarToSitOnA, GameObject avatarToSitOnB)
+	{
+		/*
+		avatarToSitOnA.transform.position = seatPositionA;
+		avatarToSitOnA.transform.rotation = seatRotationA;
+		
+		avatarToSitOnB.transform.position = seatPositionB;
+		avatarToSitOnB.transform.rotation = seatRotationB;
+		*/
+		avatarToSitOnA.transform.position = seatA_playrecord.transform.position;
+		avatarToSitOnA.transform.rotation = seatA_playrecord.transform.rotation;
+		
+		avatarToSitOnB.transform.position = seatB_playrecord.transform.position;
+		avatarToSitOnB.transform.rotation = seatB_playrecord.transform.rotation;
+	}
+	protected void makeSeat(GameObject obj, bool positionA)
+	{
+		if(positionA)
+		{
+			obj.transform.position = seatPositionA;
+			obj.transform.rotation = seatRotationA;
+		}
+		else
+		{
+			obj.transform.position = seatPositionB;
+			obj.transform.rotation = seatRotationB;
+		}
+	}
+
+	
 	protected void changeColor(GameObject attacker, GameObject deffender)
 	{
 		Color color_attacker = Color.red;
 		Color color_deffender = Color.red;
 		
-		
-		if(MainMenuParam.param == 1) // sebasucit
-		{
-			color_attacker = Color.black;
-			color_deffender = Color.green;
-		}
-		else 					// sebaprotekcia
+		if(MainMenuParam.param == 3)					// sebaprotekcia
 		{
 			color_attacker = Color.blue;
 			color_deffender = Color.black;
 		}
+		else											// sebasucit
+		{
+			color_attacker = Color.black;
+			color_deffender = Color.green;
+		}
 		
 		
 		attacker.GetComponent<DynamicCharacterAvatar>().SetColor("Shirt", color_attacker);
-		attacker.GetComponent<DynamicCharacterAvatar>().BuildCharacter();
+		attacker.GetComponent<DynamicCharacterAvatar>().UpdateColors(true);
+		//attacker.GetComponent<DynamicCharacterAvatar>().BuildCharacter();
 		
 		deffender.GetComponent<DynamicCharacterAvatar>().SetColor("Shirt", color_deffender);
-		deffender.GetComponent<DynamicCharacterAvatar>().BuildCharacter();
+		deffender.GetComponent<DynamicCharacterAvatar>().UpdateColors(true);
+		//deffender.GetComponent<DynamicCharacterAvatar>().BuildCharacter();
 	}
 	protected void loadCharacterParameters()
 	{
@@ -250,7 +282,7 @@ public class SingleRoom : MonoBehaviour
 			timer1 = 0.0f;
 			
 			GameObject obj1 = Instantiate(tear, tear1_position.transform.position, tear1_position.transform.rotation);
-			Destroy(obj1, 3);
+			Destroy(obj1, 0.5f);
 		}
 		if(timer2 >= waitTime2)
 		{
@@ -258,7 +290,7 @@ public class SingleRoom : MonoBehaviour
 			timer2 = 0.0f;
 			
 			GameObject obj2 = Instantiate(tear, tear2_position.transform.position, tear2_position.transform.rotation);
-			Destroy(obj2, 3);
+			Destroy(obj2, 0.5f);
 		}
 	}
 }

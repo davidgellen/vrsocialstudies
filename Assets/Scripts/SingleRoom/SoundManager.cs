@@ -33,7 +33,8 @@ public class SoundManager : MonoBehaviour
 		IEnumerator LoadTrack(string fileName)
 		{
 			//string filename = "file://E:/testBVH/Assets/StreamingAssets/"+fileName+".wav";
-			string filename = "file://" + Path.Combine(Application.streamingAssetsPath, fileName + ".wav");
+			//string filename = "file://" + Path.Combine(Application.streamingAssetsPath, fileName + ".wav");
+			string filename = Path.Combine(Application.dataPath, "Scripts", "SingleRoom", fileName + ".wav");
 			var www = new WWW(filename);
 
 			while(www.progress < 0.2)
@@ -86,7 +87,8 @@ public class SoundManager : MonoBehaviour
             while (!(Microphone.GetPosition(null) > 0)) { }
             samplesData = new float[audioSource.clip.samples * audioSource.clip.channels];
             audioSource.clip.GetData(samplesData, 0);
-            string filePath = Path.Combine(Application.streamingAssetsPath, fileName + ".wav");
+            //string filePath = Path.Combine(Application.streamingAssetsPath, fileName + ".wav");
+            string filePath = Path.Combine(Application.dataPath, "Scripts", "SingleRoom", fileName + ".wav");
             // Delete the file if it exists.
             if (File.Exists(filePath))
             {
