@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using CrazyMinnow.SALSA;
 using UMA;
 using UMA.CharacterSystem;
+using UnityEngine.SceneManagement;
 
 public class Sebaprotekcia : SingleRoom
 {
@@ -192,7 +193,8 @@ public class Sebaprotekcia : SingleRoom
 	void phase1_start()
 	{
 		// zmen farby
-		changeColor(avatar, agent);
+		changeColor(avatar, 2);
+		changeColor(agent, 1);
 		
 		// vypnutie fyziky
 		//avatar.GetComponent<Rigidbody>().isKinematic = true;
@@ -274,7 +276,10 @@ public class Sebaprotekcia : SingleRoom
 	*/
 	async void phase2_start()
 	{
-		changeColor(avatar, agent);
+		// zmen farby
+		changeColor(avatar, 1);
+		changeColor(agent, 2);
+		
 		//makeSeat(agent, avatar);
 		makeSeat(agent, avatar);
 		
@@ -313,7 +318,10 @@ public class Sebaprotekcia : SingleRoom
 	*/
 	void phase3_start()
 	{
-		changeColor(agent, avatar);
+		// zmen farby
+		changeColor(avatar, 4);
+		changeColor(agent, 2);
+		
 		resetAddTime();
 		wordcount = 0;
 		
@@ -372,7 +380,10 @@ public class Sebaprotekcia : SingleRoom
 	*/
 	async void phase4_start()
 	{
-		changeColor(agent, avatar);
+		// zmen farby
+		changeColor(avatar, 2);
+		changeColor(agent, 4);
+		
 		makeSeat(avatar, agent);
 	
 		/*
@@ -409,7 +420,10 @@ public class Sebaprotekcia : SingleRoom
 		funkcia ktora sa zavola raz ked sa ukonci experiment
 	*/
 	void phaseEndOfExperiment_start()
-	{}
+	{
+		Debug.Log("KONIEC EXPERIMENTU");
+		SceneManager.LoadScene("Menu");
+	}
 
 	/* --------- tlacidlo --------- */
 	void phasePause()

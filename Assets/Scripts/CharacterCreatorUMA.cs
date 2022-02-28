@@ -99,6 +99,7 @@ public class CharacterCreatorUMA : MonoBehaviour
 			avatar.ClearSlot("Feet");
 			avatar.SetSlot("Feet", "TallShoes_Black_Recipe");
 			
+			avatar.GetComponent<DynamicCharacterAvatar>().SetColor("Shirt",  new Color(51/255f, 63/255f, 140/255f) );
 			//avatar.GetComponent<DynamicCharacterAvatar>().SetColor("Pants",  new Color(178/255f, 178/255f, 178/255f) );
 			//avatar.GetComponent<DynamicCharacterAvatar>().SetColor("Pants1",  new Color(178/255f, 178/255f, 178/255f) );
 			avatar.GetComponent<DynamicCharacterAvatar>().UpdateColors(true);
@@ -123,6 +124,7 @@ public class CharacterCreatorUMA : MonoBehaviour
 			avatar.ClearSlot("Feet");
 			avatar.SetSlot("Feet", "FemaleTallShoes_Black");
 			
+			avatar.GetComponent<DynamicCharacterAvatar>().SetColor("Shirt",  new Color(51/255f, 63/255f, 140/255f) );
 			avatar.GetComponent<DynamicCharacterAvatar>().SetColor("Pants",  new Color(178/255f, 178/255f, 178/255f) );
 			avatar.GetComponent<DynamicCharacterAvatar>().SetColor("Pants1",  new Color(178/255f, 178/255f, 178/255f) );
 			avatar.GetComponent<DynamicCharacterAvatar>().UpdateColors(true);

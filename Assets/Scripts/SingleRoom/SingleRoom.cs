@@ -21,6 +21,7 @@ using UnityEngine.UI;
 using UnityEngine.Windows.Speech;
 using UMA;
 using UMA.CharacterSystem;
+using Unity.VisualScripting;
 
 public class SingleRoom : MonoBehaviour
 {
@@ -278,31 +279,38 @@ public class SingleRoom : MonoBehaviour
 		}
 	}
 
-	
-	protected void changeColor(GameObject attacker, GameObject deffender)
+	/*
+	MODRA = 1
+	CIERNA = 2
+	ZLTA = 3
+	CERVENA = 4
+	*/
+	protected void changeColor(GameObject uma, int colorcode)
 	{
-		Color color_attacker = Color.red;
-		Color color_deffender = Color.red;
-		
-		if(MainMenuParam.param == 3)					// sebaprotekcia
+		Color uma_blue = new Color(51/255f, 63/255f, 140/255f);
+		Color uma_black = new Color(0/255f, 0/255f, 0/255f);
+		Color uma_yellow = new Color(255/255f, 255/255f, 0/255f);
+		Color uma_red = new Color(240/255f, 15/255f, 15/255f);
+		Color color_chosen = new Color(0,0,0);
+
+		switch (colorcode)
 		{
-			color_attacker = Color.blue;
-			color_deffender = Color.black;
+			case 1:
+				color_chosen = uma_blue;
+				break;
+			case 2:
+				color_chosen = uma_black;
+				break;
+			case 3: 
+				color_chosen = uma_yellow;
+				break;
+			case 4:
+				color_chosen = uma_red;
+				break;
 		}
-		else											// sebasucit
-		{
-			color_attacker = Color.black;
-			color_deffender = Color.green;
-		}
-		
-		
-		attacker.GetComponent<DynamicCharacterAvatar>().SetColor("Shirt", color_attacker);
-		attacker.GetComponent<DynamicCharacterAvatar>().UpdateColors(true);
-		//attacker.GetComponent<DynamicCharacterAvatar>().BuildCharacter();
-		
-		deffender.GetComponent<DynamicCharacterAvatar>().SetColor("Shirt", color_deffender);
-		deffender.GetComponent<DynamicCharacterAvatar>().UpdateColors(true);
-		//deffender.GetComponent<DynamicCharacterAvatar>().BuildCharacter();
+
+		uma.GetComponent<DynamicCharacterAvatar>().SetColor("Shirt", color_chosen);
+		uma.GetComponent<DynamicCharacterAvatar>().UpdateColors(true);
 	}
 	protected void loadCharacterParameters()
 	{
