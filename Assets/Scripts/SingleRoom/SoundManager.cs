@@ -34,7 +34,7 @@ public class SoundManager : MonoBehaviour
 		{
 			//string filename = "file://E:/testBVH/Assets/StreamingAssets/"+fileName+".wav";
 			//string filename = "file://" + Path.Combine(Application.streamingAssetsPath, fileName + ".wav");
-			string filename = Path.Combine(Application.dataPath, "Scripts", "SingleRoom", fileName + ".wav");
+			string filename = Path.Combine(Application.persistentDataPath, fileName + ".wav");
 			var www = new WWW(filename);
 
 			while(www.progress < 0.2)
@@ -88,7 +88,9 @@ public class SoundManager : MonoBehaviour
             samplesData = new float[audioSource.clip.samples * audioSource.clip.channels];
             audioSource.clip.GetData(samplesData, 0);
             //string filePath = Path.Combine(Application.streamingAssetsPath, fileName + ".wav");
-            string filePath = Path.Combine(Application.dataPath, "Scripts", "SingleRoom", fileName + ".wav");
+				//string filePath = Path.Combine(Application.dataPath, "Scripts", "SingleRoom", fileName + ".wav");
+				string filePath = Path.Combine(Application.persistentDataPath, fileName + ".wav");
+				
             // Delete the file if it exists.
             if (File.Exists(filePath))
             {
@@ -97,7 +99,8 @@ public class SoundManager : MonoBehaviour
             try
             {
                 WriteWAVFile(audioSource.clip, filePath);
-                Debug.Log("File Saved Successfully at StreamingAssets/" + fileName + ".wav");
+                //Debug.Log("File Saved Successfully at StreamingAssets/" + fileName + ".wav");
+                Debug.Log(".WAV SAVED AT: "+Application.persistentDataPath); 
             }
             catch (DirectoryNotFoundException)
             {

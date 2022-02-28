@@ -291,7 +291,8 @@ public class Sebasucit : SingleRoom
 		
 		// --------------------- lipsync (on file input)
 		agent.GetComponent<Salsa>().audioSrc.Stop();
-		string filename = Path.Combine(Application.dataPath, "Scripts", "SingleRoom", "sound.wav");
+		Debug.Log(".WAV LOAD FROM: "+Application.persistentDataPath); 
+		string filename = Path.Combine(Application.persistentDataPath, "sound.wav");
 		AudioClip clip = await LoadAudioClip(filename);
 		if (clip != null){
 			agent.GetComponent<AudioSource>().clip = clip;
@@ -396,7 +397,8 @@ public class Sebasucit : SingleRoom
 		
 		// --------------------- lipsync (on file input)
 		agent.GetComponent<Salsa>().audioSrc.Stop();
-		string filename = Path.Combine(Application.dataPath, "Scripts", "SingleRoom", "sound.wav");
+		Debug.Log(".WAV LOAD FROM: "+Application.persistentDataPath); 
+		string filename = Path.Combine(Application.persistentDataPath, "sound.wav");
 		AudioClip clip = await LoadAudioClip(filename);
 		if (clip != null){
 			agent.GetComponent<AudioSource>().clip = clip;
