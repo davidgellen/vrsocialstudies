@@ -14,6 +14,10 @@ public class EmbodymentButton : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        if (MainMenuParam.param == 0) // 10 min cisto embodyment
+        {
+            timeLimit = 1 * 60.0f;
+        }
     }
 
     // Update is called once per frame
@@ -49,6 +53,7 @@ public class EmbodymentButton : MonoBehaviour
     {
         switch(MainMenuParam.param)
         {
+            case 0: SceneManager.LoadScene("Menu");break;
             case 1: SceneManager.LoadScene(2); break;
             case 2: SceneManager.LoadScene(3); break;
             case 3: SceneManager.LoadScene("SingleRoom3"); break;

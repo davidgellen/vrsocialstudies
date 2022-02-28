@@ -42,6 +42,7 @@ public class MainMenu : MonoBehaviour
     
     public void StartTestEmbodiment()
     {
+        MainMenuParam.param = 0;
         SceneManager.LoadScene(6);
     }
 

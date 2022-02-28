@@ -81,6 +81,16 @@ public class Sebasucit : SingleRoom
 		seatA_playrecord = srm.seatA_playrecord;
 		seatB_playrecord = srm.seatB_playrecord;
 		
+		
+		/* gui */
+		/*
+		isGUITimerActive = srm.isGUITimerActive;
+		timeLimit = srm.timeLimit;
+		timeText = srm.timeText;
+		timeObject = srm.timeObject;
+		*/
+		
+		
 		phase = 0;
 		time = 0;
 		isRecording = false;
@@ -120,7 +130,7 @@ public class Sebasucit : SingleRoom
 			Debug.Log("timePause = " + timePause);
 			this.timePause = this.timePause + Time.deltaTime;
 			isPhaseStopped = true;
-			
+
 			// ak skoncila 1. a 3. faza tak uloz motion a sound
 			if(phase == 1 && savedAtEnd == false || phase == 3 && savedAtEnd == false)
 			{
@@ -182,7 +192,7 @@ public class Sebasucit : SingleRoom
 	void phase1_start()
 	{
 		// zmen farby
-			//changeColor(avatar, agent);
+		changeColor(avatar, agent);
 		
 		// vypnutie fyziky
 		//avatar.GetComponent<Rigidbody>().isKinematic = true;
@@ -264,6 +274,7 @@ public class Sebasucit : SingleRoom
 	*/
 	async void phase2_start()
 	{
+		changeColor(agent, avatar);
 		//makeSeat(agent, avatar);
 		makeSeatPlayRecord(agent, avatar); // <-- test 21.2
 		
@@ -302,7 +313,7 @@ public class Sebasucit : SingleRoom
 	*/
 	void phase3_start()
 	{
-		
+		changeColor(avatar, agent);
 		resetAddTime();
 		wordcount = 0;
 		
@@ -361,6 +372,7 @@ public class Sebasucit : SingleRoom
 	*/
 	async void phase4_start()
 	{
+		changeColor(agent, avatar);
 		makeSeat(agent, avatar);
 	
 		/*
@@ -403,6 +415,11 @@ public class Sebasucit : SingleRoom
 	void phasePause()
 	{
 		agent.SetActive(false);
+		
+		//startGUItimer();
+		//timeLimit = 30.0f;
+		srm.isGUITimerActive = true;
+		//timeObject.SetActive(true);
 	}
 	void phaseUnpause()
 	{

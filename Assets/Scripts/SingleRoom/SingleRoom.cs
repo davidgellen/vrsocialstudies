@@ -85,6 +85,13 @@ public class SingleRoom : MonoBehaviour
 	private float waitTime1 = 5.0f;
 	private float waitTime2 = 4.0f;
 	
+	// gui timer
+	public bool isGUITimerActive = false;
+	public float timeLimit = 20.0f;
+	public TextMesh timeText;
+	public GameObject timeObject;
+	
+	
     void Start()
     {
         Debug.Log("TERAZ SA NACITALA SCENA S PARAMETROM: "+MainMenuParam.param);
@@ -114,11 +121,47 @@ public class SingleRoom : MonoBehaviour
 
 		if(isCrying)
 		cry();
+
+
+		if (isGUITimerActive)
+		{
+			timeObject.SetActive(true);
+			// show time
+			timeLimit = timeLimit - Time.deltaTime;
+			Debug.Log(timeLimit);
+        
+			float minutes = Mathf.FloorToInt(timeLimit / 60);
+			float seconds = Mathf.FloorToInt(timeLimit % 60);
+			timeText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+
+			if (timeLimit <= 1)
+			{
+				isGUITimerActive = false; 
+				timeObject.SetActive(false);
+			}
+		}
+		else
+		{
+			timeLimit = 20.0f;
+			timeObject.SetActive(false);
+		}
     }
 	
 	
 	/* ----------------------- pomocne funkcie oboch experimentov  ----------------------- */
 	// voice recognition funkcia
+	
+	/*protected void startGUItimer()
+	{
+		if (!isGUITimerActive)
+		{
+			timeLimit = 30.0f;
+			isGUITimerActive = true;
+			timeObject.SetActive(true);
+		}
+	}
+	*/
+
 	void recordStuff()
 	{
 		//wordcount = 0;

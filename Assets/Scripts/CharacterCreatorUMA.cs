@@ -88,7 +88,7 @@ public class CharacterCreatorUMA : MonoBehaviour
 			
 			// rovno aj oblecenie
 			avatar.ClearSlot("Hair");
-			avatar.SetSlot("Hair", "MaleHair2");
+			avatar.SetSlot("Hair", "MaleHairSlick01_Recipe");
 			
 			avatar.ClearSlot("Chest");
 			avatar.SetSlot("Chest", "MaleHoodie_Recipe");
@@ -99,6 +99,10 @@ public class CharacterCreatorUMA : MonoBehaviour
 			avatar.ClearSlot("Feet");
 			avatar.SetSlot("Feet", "TallShoes_Black_Recipe");
 			
+			//avatar.GetComponent<DynamicCharacterAvatar>().SetColor("Pants",  new Color(178/255f, 178/255f, 178/255f) );
+			//avatar.GetComponent<DynamicCharacterAvatar>().SetColor("Pants1",  new Color(178/255f, 178/255f, 178/255f) );
+			avatar.GetComponent<DynamicCharacterAvatar>().UpdateColors(true);
+			
 			avatar.BuildCharacter();
 		}
 		
@@ -108,16 +112,20 @@ public class CharacterCreatorUMA : MonoBehaviour
 			
 			// rovno aj oblecenie
 			avatar.ClearSlot("Hair");
-			avatar.SetSlot("Hair", "FemaleHair2");
+			avatar.SetSlot("Hair", "FemaleHair1");
 			
 			avatar.ClearSlot("Chest");
-			avatar.SetSlot("Chest", "FemaleShirt2");
+			avatar.SetSlot("Chest", "FemaleShirt1");
 			
 			avatar.ClearSlot("Legs");
 			avatar.SetSlot("Legs", "FemalePants1");
 			
 			avatar.ClearSlot("Feet");
-			avatar.SetSlot("Feet", "FemaleTallShoes_Turquoise");
+			avatar.SetSlot("Feet", "FemaleTallShoes_Black");
+			
+			avatar.GetComponent<DynamicCharacterAvatar>().SetColor("Pants",  new Color(178/255f, 178/255f, 178/255f) );
+			avatar.GetComponent<DynamicCharacterAvatar>().SetColor("Pants1",  new Color(178/255f, 178/255f, 178/255f) );
+			avatar.GetComponent<DynamicCharacterAvatar>().UpdateColors(true);
 			
 			avatar.BuildCharacter();
 		}
@@ -126,10 +134,13 @@ public class CharacterCreatorUMA : MonoBehaviour
 	
 	public void Save()
 	{
+		/*
 		UMATextRecipe recipe = ScriptableObject.CreateInstance<UMATextRecipe>();
         recipe.Save(avatar.umaData.umaRecipe, avatar.context);
         string characterParameters = recipe.recipeString;
         Destroy(recipe);
+        */
+		string characterParameters = avatar.GetComponent<DynamicCharacterAvatar>().GetCurrentRecipe();
          
         //string fileName = "StreamingAssets/character.txt";
 		string fileName = Path.Combine(Application.streamingAssetsPath, "character" + ".txt");
