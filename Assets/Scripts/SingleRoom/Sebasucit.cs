@@ -19,7 +19,7 @@ public class Sebasucit : SingleRoom
 	public bool savedAtEnd = false;
 	
 	private float timePause = 0;
-	public const float DELAY_TIME = 20.0f;
+	public const float DELAY_TIME = 30.0f;
 	
 	
 	// ------------------------------- lipsync

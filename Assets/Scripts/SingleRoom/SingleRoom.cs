@@ -32,7 +32,7 @@ public class SingleRoom : MonoBehaviour
 	public float timeAdded = 0; 						//kolko casu sa  pridalo kvoli rozpravaniu
 	
 	// misc
-	protected const float DEFAULT_PHASE_LENGTH = 60; 	// v sekundach
+	protected const float DEFAULT_PHASE_LENGTH = 2 * 60.0f; 	// v sekundach
 	protected float phase_length = 120;
 	
 	public int phase;					  				// aktualna faza
@@ -88,7 +88,7 @@ public class SingleRoom : MonoBehaviour
 	
 	// gui timer
 	public bool isGUITimerActive = false;
-	public float timeLimit = 20.0f;
+	public float timeLimit = 30.0f;
 	public TextMesh timeText;
 	public GameObject timeObject;
 	
@@ -143,7 +143,7 @@ public class SingleRoom : MonoBehaviour
 		}
 		else
 		{
-			timeLimit = 20.0f;
+			timeLimit = 30.0f;
 			timeObject.SetActive(false);
 		}
     }
