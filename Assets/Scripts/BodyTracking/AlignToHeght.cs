@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class AlignToHeght : MonoBehaviour
 {
+    [SerializeField] GameObject head;
+    [SerializeField] GameObject headTarget;
+    [SerializeField] GameObject hips;
+    [SerializeField] GameObject hipsTarget;
     [SerializeField] GameObject leftHand;
     [SerializeField] GameObject leftHandTarget;
     [SerializeField] GameObject rightHand;
@@ -16,8 +20,8 @@ public class AlignToHeght : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        GameObject[] rootBones = { leftHand, rightHand, leftLegTarget, rightLegTarget };
-        GameObject[] targets = { leftHandTarget, rightHandTarget, leftLegTarget, rightLegTarget };
+        GameObject[] rootBones = { head, hips, leftHand, rightHand, leftLeg, rightLeg };
+        GameObject[] targets = { headTarget, hipsTarget, leftHandTarget, rightHandTarget, leftLegTarget, rightLegTarget };
         alignTargetsToRoots(rootBones, targets);
     }
 

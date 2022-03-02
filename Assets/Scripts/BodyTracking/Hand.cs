@@ -24,51 +24,49 @@ public class Hand : MonoBehaviour
         _body = GetComponent<Rigidbody>();
         _body.collisionDetectionMode = CollisionDetectionMode.Continuous;
         _body.interpolation = RigidbodyInterpolation.Interpolate;
-        _body.mass = 20f;
+       // _body.mass = 20f;
     }
 
-    // Update is called once per frame
-    //void Update()
-    //{
-    //    PhysicsMove();
-    //}
-
-    //void PhysicsMove()
-    //{
-    //    position
-    //   var positionWithOffset = _followTarget.position + positionOffset;
-    //    var distance = Vector3.Distance(positionWithOffset, transform.position);
-    //    _body.velocity = (positionWithOffset - transform.position).normalized * (followSpeed * distance);
-
-    //    _body.transform.position = _followTarget.position + _followTarget.TransformDirection(positionOffset);
-
-    //    startRotation = transform.rotation;
-    //    endRotation = followObject.transform.rotation;
-    //    transform.rotation = Quaternion.Lerp(startRotation, endRotation, Time.deltaTime * rotationSpeed);
-    //    Vector3 newRotation = new Vector3((followObject.transform.eulerAngles.x + rotationOffset.x), (followObject.transform.eulerAngles.y + rotationOffset.y), (followObject.transform.eulerAngles.z + rotationOffset.z));
-    //    transform.eulerAngles = newRotation;
-
-    //    rotation
-    //    var rotationWithOffset = _followTarget.rotation * Quaternion.Euler(rotationOffset);
-    //    var q = rotationWithOffset * Quaternion.Inverse(_body.rotation);
-    //    q.ToAngleAxis(out float angle, out Vector3 axis);
-    //    transform.eulerAngles = axis;
-    //    _body.angularVelocity = axis * (angle * Mathf.Deg2Rad * rotateSpeed);
-    //}
-
-    void StartRotating()
+    void Update()
     {
-        startRotation = transform.rotation;
-        endRotation = Quaternion.Euler(followObject.transform.rotation.eulerAngles.x, followObject.transform.rotation.eulerAngles.y, followObject.transform.rotation.eulerAngles.z);
-        rotationProgress = 0;
+        PhysicsMove();
     }
 
-    private void Update()
+    void PhysicsMove()
     {
+        
+        //var positionWithOffset = _followTarget.position + positionOffset;
+        //var distance = Vector3.Distance(positionWithOffset, transform.position);
+        //_body.velocity = (positionWithOffset - transform.position).normalized * (followSpeed * distance);
+
         _body.transform.position = _followTarget.position + _followTarget.TransformDirection(positionOffset);
 
-        Vector3 direction = new Vector3(followObject.transform.rotation.eulerAngles.x, followObject.transform.rotation.eulerAngles.y, followObject.transform.rotation.eulerAngles.z);
-        Quaternion targetRotation = Quaternion.Euler(direction);
-        transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
+        startRotation = transform.rotation;
+        endRotation = followObject.transform.rotation;
+        transform.rotation = Quaternion.Lerp(startRotation, endRotation, Time.deltaTime * rotationSpeed);
+        Vector3 newRotation = new Vector3((followObject.transform.eulerAngles.x + rotationOffset.x), (followObject.transform.eulerAngles.y + rotationOffset.y), (followObject.transform.eulerAngles.z + rotationOffset.z));
+        transform.eulerAngles = newRotation;
+
+
+        //var rotationWithOffset = _followTarget.rotation * Quaternion.Euler(rotationOffset);
+        //var q = rotationWithOffset * Quaternion.Inverse(_body.rotation);
+        //q.ToAngleAxis(out float angle, out Vector3 axis);
+        //_body.angularVelocity = axis * (angle * Mathf.Deg2Rad * rotateSpeed);
     }
+
+    //void StartRotating()
+    //{
+    //    startRotation = transform.rotation;
+    //    endRotation = Quaternion.Euler(followObject.transform.rotation.eulerAngles.x, followObject.transform.rotation.eulerAngles.y, followObject.transform.rotation.eulerAngles.z);
+    //    rotationProgress = 0;
+    //}
+
+    //private void Update()
+    //{
+    //    _body.transform.position = _followTarget.position + _followTarget.TransformDirection(positionOffset);
+
+    //    Vector3 direction = new Vector3(followObject.transform.rotation.eulerAngles.x, followObject.transform.rotation.eulerAngles.y, followObject.transform.rotation.eulerAngles.z);
+    //    Quaternion targetRotation = Quaternion.Euler(direction);
+    //    transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
+    
 }
