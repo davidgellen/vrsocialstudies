@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 public class EmbodymentButton : MonoBehaviour
 {
     public float time = 0;
-    public float timeLimit = 30.0f;
+    public float timeLimit = 2 * 60.0f;
     public TextMesh timeText;
     
     // Start is called before the first frame update
@@ -16,7 +16,11 @@ public class EmbodymentButton : MonoBehaviour
     {
         if (MainMenuParam.param == 0) // 10 min cisto embodyment
         {
-            timeLimit = 1 * 60.0f;
+            timeLimit = 10 * 60.0f;
+        }
+        else
+        {
+            timeLimit = 2 * 60.0f;
         }
     }
 
