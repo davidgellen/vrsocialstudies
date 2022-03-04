@@ -5,13 +5,15 @@ using UnityEngine;
 public class Foot : MonoBehaviour
 {
     [SerializeField] GameObject followObject;
-    [SerializeField] float followSpeed = 30f;
-    [SerializeField] float rotateSpeed = 100f;
     [SerializeField] Vector3 positionOffset;
     [SerializeField] Vector3 rotationOffset;
     [SerializeField] int rotationSpeed;
     private Transform _followTarget;
     private Rigidbody _body;
+
+    float rotationProgress = -1;
+    Quaternion startRotation;
+    Quaternion endRotation;
 
     // Start is called before the first frame update
     void Start()
@@ -20,7 +22,7 @@ public class Foot : MonoBehaviour
         _body = GetComponent<Rigidbody>();
         _body.collisionDetectionMode = CollisionDetectionMode.Continuous;
         _body.interpolation = RigidbodyInterpolation.Interpolate;
-        _body.mass = 20f;
+        // _body.mass = 20f;
     }
 
     void Update()
@@ -30,16 +32,14 @@ public class Foot : MonoBehaviour
 
     void PhysicsMove()
     {
-        // position
-        var positionWithOffset = _followTarget.position + positionOffset;
-        // var positionWithOffset = _followTarget.TransformPoint(positionOffset);
-        var distance = Vector3.Distance(positionWithOffset, transform.position);
-        _body.velocity = (positionWithOffset - transform.position).normalized * (followSpeed * distance);
 
-        //rotation
-        var rotationWithOffset = _followTarget.rotation * Quaternion.Euler(rotationOffset);
-        var q = rotationWithOffset * Quaternion.Inverse(_body.rotation);
-        q.ToAngleAxis(out float angle, out Vector3 axis);
-        _body.angularVelocity = axis * (angle * Mathf.Deg2Rad * rotateSpeed);
+        _body.transform.position = _followTarget.position + _followTarget.TransformDirection(positionOffset);
+
+        startRotation = transform.rotation;
+        endRotation = followObject.transform.rotation;
+        transform.rotation = Quaternion.Lerp(startRotation, endRotation, Time.deltaTime * rotationSpeed);
+        Vector3 newRotation = new Vector3((followObject.transform.eulerAngles.x + rotationOffset.x), (followObject.transform.eulerAngles.y + rotationOffset.y), (followObject.transform.eulerAngles.z + rotationOffset.z));
+        transform.eulerAngles = newRotation;
+
     }
 }

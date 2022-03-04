@@ -27,6 +27,11 @@ public class AlignToHeght : MonoBehaviour
     [SerializeField] GameObject rightLegHint;
     [SerializeField] GameObject rightlegController;
 
+    private float expectedHandsDistance = 1.45f;
+
+    private float nextActionTime = 0.0f;
+    public float period = 4f;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -44,7 +49,13 @@ public class AlignToHeght : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (Time.time > nextActionTime)
+        {
+            nextActionTime += period;
+            Debug.Log("target Left Hand: " + leftHandTarget.transform.position.y);
+            Debug.Log("UMA left Hand: " + leftHand.transform.position.y);
+            Debug.Log("ROZDIEL RUK" + (leftHandTarget.transform.position.y - leftHand.transform.position.y));
+        }
     }
 
     public void alignTargetsToRoots(GameObject[] rootBones, GameObject[] targets)
@@ -68,11 +79,17 @@ public class AlignToHeght : MonoBehaviour
         float distanceHandControllers = Vector3.Distance(leftHandController.transform.position, rightHandController.transform.position);
         Debug.Log("distanceHands: " + distanceHands);
         Debug.Log("distanceHandControllers: " + distanceHandControllers);
+        float nasRozdiel = (expectedHandsDistance + distanceHands) / 2;
+        Debug.Log("rozdiel na 1 ruku: " + nasRozdiel);
+        //leftHandTarget.transform.position -= transform.up * nasRozdiel;
+        //rightHandTarget.transform.position -= transform.up * nasRozdiel;
 
-        float distanceRightLegHead = Vector3.Distance(rightLeg.transform.position, head.transform.position);
-        float distanceRightLegHeadController = Vector3.Distance(rightlegController.transform.position, head.transform.position);
-        Debug.Log("distanceRightLegHead: " + distanceRightLegHead);
-        Debug.Log("distanceRightLegHeadController: " + distanceRightLegHeadController);
+
+
+        //float distanceRightLegHead = Vector3.Distance(rightLeg.transform.position, head.transform.position);
+        //float distanceRightLegHeadController = Vector3.Distance(rightlegController.transform.position, head.transform.position);
+        //Debug.Log("distanceRightLegHead: " + distanceRightLegHead);
+        //Debug.Log("distanceRightLegHeadController: " + distanceRightLegHeadController);
     }
 
     IEnumerator enableHints(GameObject[] hints)
