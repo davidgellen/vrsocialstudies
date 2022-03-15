@@ -19,7 +19,7 @@ public class Sebasucit : SingleRoom
 	public bool savedAtEnd = false;
 	
 	private float timePause = 0;
-	public const float DELAY_TIME = 30.0f;
+	public const float DELAY_TIME = 5.0f;
 	
 	
 	// ------------------------------- lipsync
@@ -302,10 +302,12 @@ public class Sebasucit : SingleRoom
 		else{
 			Debug.Log("je to null");
 		}
-		// -----------------------------------------------
-		
-		//scmanager.soundManager.Play("sound");
-		scmanager.motionManager.Play("motion");
+        // -----------------------------------------------
+
+        //scmanager.soundManager.Play("sound");
+        scmanager.kid.transform.Rotate(0, -90, 0, Space.Self);
+        scmanager.kid.transform.Translate(0, 0.3f, 0, Space.Self);
+        scmanager.motionManager.Play("motion");
 	}
 	void phase2()
 	{
@@ -329,8 +331,8 @@ public class Sebasucit : SingleRoom
 		makeSeat(avatar, agent);
 		
 		scmanager.soundManager.Record();
-		
-		scmanager.motionManager.Reset();
+        // scmanager.kid.transform.Rotate(0, -90, 0, Space.Self);
+        scmanager.motionManager.Reset();
 		scmanager.motionManager.Record();
 		agent.GetComponent<Animator>().enabled = true;
 		
@@ -408,10 +410,10 @@ public class Sebasucit : SingleRoom
 		else{
 			Debug.Log("je to null");
 		}
-		// ---------------------------------------------
-		
-		//scmanager.soundManager.Play("sound");
-		scmanager.motionManager.Play("motion");
+        // ---------------------------------------------
+        scmanager.kid.transform.Translate(0, 0, 0.5f, Space.Self);
+        //scmanager.soundManager.Play("sound");
+        scmanager.motionManager.Play("motion");
 		
 		resetAvatarScale(agent);
 	}

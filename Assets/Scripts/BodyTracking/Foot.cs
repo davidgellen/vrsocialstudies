@@ -25,6 +25,11 @@ public class Foot : MonoBehaviour
         // _body.mass = 20f;
     }
 
+    public void setPositionOffset(Vector3 offset)
+    {
+        positionOffset = offset;
+    }
+
     void Update()
     {
         PhysicsMove();

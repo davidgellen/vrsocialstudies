@@ -40,8 +40,8 @@ public class Hand : MonoBehaviour
             //Quaternion defaultPos = _followTarget.position + _followTarget.TransformDirection(positionOffset);
             //copy.look
             //_body.transform.LookAt(shoulder.transform);
-            Vector3 test = Vector3.MoveTowards(_followTarget.position, shoulder.transform.position, shoulderSpeed * distanceControllerShoulder);
-            _body.transform.position = test;
+            Vector3 newPos = Vector3.MoveTowards(_followTarget.position, shoulder.transform.position, shoulderSpeed * distanceControllerShoulder);
+            _body.transform.position = newPos;
 
             //Vector3 targetDirection = shoulder.transform.position - _body.transform.position;
             //targetDirection = targetDirection.normalized * shoulderSpeed * distanceControllerShoulder * Time.deltaTime;

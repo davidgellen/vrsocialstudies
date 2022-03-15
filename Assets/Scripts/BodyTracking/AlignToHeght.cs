@@ -25,7 +25,7 @@ public class AlignToHeght : MonoBehaviour
     [SerializeField] GameObject rightLeg;
     [SerializeField] GameObject rightLegTarget;
     [SerializeField] GameObject rightLegHint;
-    [SerializeField] GameObject rightlegController;
+    [SerializeField] GameObject rightLegController;
 
     private float expectedHandsDistance = 1.45f;
 
@@ -38,24 +38,25 @@ public class AlignToHeght : MonoBehaviour
 
         GameObject[] rootBones = { head, hips, leftHand, rightHand, leftLeg, rightLeg };
         GameObject[] targets = { headTarget, hipsTarget, leftHandTarget, rightHandTarget, leftLegTarget, rightLegTarget };
-        GameObject[] controllers = { headController, hipsController, leftHandController, rightHandController, leftLegController, rightlegController};
+        GameObject[] controllers = { headController, hipsController, leftHandController, rightHandController, leftLegController, rightLegController};
         GameObject[] hints = { leftHandHint, rightHandHint, leftLegHint, rightLegHint };
         alignTargetsToRoots(rootBones, targets);
-        StartCoroutine(alighnToHeight());
         StartCoroutine(disableHints(hints));
         StartCoroutine(enableHints(hints));
+        StartCoroutine(alighnToHeight());
+        
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Time.time > nextActionTime)
-        {
-            nextActionTime += period;
-            Debug.Log("target Left Hand: " + leftHandTarget.transform.position.y);
-            Debug.Log("UMA left Hand: " + leftHand.transform.position.y);
-            Debug.Log("ROZDIEL RUK" + (leftHandTarget.transform.position.y - leftHand.transform.position.y));
-        }
+        //if (Time.time > nextActionTime)
+        //{
+        //    nextActionTime += period;
+        //    Debug.Log("target Left Hand: " + leftHandTarget.transform.position.y);
+        //    Debug.Log("UMA left Hand: " + leftHand.transform.position.y);
+        //    Debug.Log("ROZDIEL RUK" + (leftHandTarget.transform.position.y - leftHand.transform.position.y));
+        //}
     }
 
     public void alignTargetsToRoots(GameObject[] rootBones, GameObject[] targets)
@@ -71,30 +72,32 @@ public class AlignToHeght : MonoBehaviour
 
     IEnumerator alighnToHeight()
     {
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(4);
         GameObject[] rootBones = { head, hips, leftHand, rightHand, leftLeg, rightLeg };
         GameObject[] targets = { headTarget, hipsTarget, leftHandTarget, rightHandTarget, leftLegTarget, rightLegTarget };
-        GameObject[] controllers = { headController, hipsController, leftHandController, rightHandController, leftLegController, rightlegController };
-        float distanceHands = Vector3.Distance(leftHand.transform.position, rightHand.transform.position);
-        float distanceHandControllers = Vector3.Distance(leftHandController.transform.position, rightHandController.transform.position);
-        Debug.Log("distanceHands: " + distanceHands);
-        Debug.Log("distanceHandControllers: " + distanceHandControllers);
-        float nasRozdiel = (expectedHandsDistance + distanceHands) / 2;
-        Debug.Log("rozdiel na 1 ruku: " + nasRozdiel);
-        //leftHandTarget.transform.position -= transform.up * nasRozdiel;
-        //rightHandTarget.transform.position -= transform.up * nasRozdiel;
+        GameObject[] controllers = { headController, hipsController, leftHandController, rightHandController, leftLegController, rightLegController };
 
+        float distanceRightLegUmaHips = Vector3.Distance(rightLeg.transform.position, hips.transform.position);
+        float distanceRightLegHipsController = Vector3.Distance(rightLegController.transform.position, hips.transform.position);
+        float diff = distanceRightLegHipsController - distanceRightLegUmaHips;
+        rightLegTarget.GetComponent<Foot>().setPositionOffset(new Vector3(diff, 0, 0));
+        leftLegTarget.GetComponent<Foot>().setPositionOffset(new Vector3(diff, 0, 0));
 
+        float distanceRightLegHead = Vector3.Distance(rightLeg.transform.position, head.transform.Find("HeadTop").gameObject.transform.position);
+        float distanceRightLegHeadController = Vector3.Distance(rightLegController.transform.position, head.transform.Find("HeadTop").gameObject.transform.position);
+        float diffHead = distanceRightLegHeadController - distanceRightLegHead;
+        headController.transform.parent.gameObject.transform.position = new Vector3(headController.transform.parent.gameObject.transform.position.x, headController.transform.parent.gameObject.transform.position.y - diffHead, headController.transform.parent.gameObject.transform.position.z);
 
-        //float distanceRightLegHead = Vector3.Distance(rightLeg.transform.position, head.transform.position);
-        //float distanceRightLegHeadController = Vector3.Distance(rightlegController.transform.position, head.transform.position);
+        transform.position = transform.position - new Vector3(0, diff, 0);
+       // hipsTarget.GetComponent<CopyTransform>().setPositionOffset(hipsTarget.GetComponent<CopyTransform>().getPositionOffest() - new Vector3(diff, 0, 0));
         //Debug.Log("distanceRightLegHead: " + distanceRightLegHead);
         //Debug.Log("distanceRightLegHeadController: " + distanceRightLegHeadController);
+        //Debug.Log("diff: " + diffHead);
     }
 
     IEnumerator enableHints(GameObject[] hints)
     {
-        yield return new WaitForSeconds(4);
+        yield return new WaitForSeconds(3);
         for (int i = 0; i < hints.Length; i++)
         {
             hints[i].GetComponent<HintMover>().enabled = true;
@@ -104,7 +107,7 @@ public class AlignToHeght : MonoBehaviour
 
     IEnumerator disableHints(GameObject[] hints)
     {
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(1);
         for (int i = 0; i < hints.Length; i++)
         {
             hints[i].GetComponent<HintMover>().enabled = false;

@@ -31,4 +31,14 @@ public class CopyTransform : MonoBehaviour
         //destinationObject.transform.position = newPosition;
         destinationObject.transform.position = sourceObject.transform.position + sourceObject.transform.TransformDirection(positionOffset);
     }
+
+    public void setPositionOffset(Vector3 offset)
+    {
+        positionOffset = offset;
+    }
+
+    public Vector3 getPositionOffest()
+    {
+        return positionOffset;
+    }
 }
