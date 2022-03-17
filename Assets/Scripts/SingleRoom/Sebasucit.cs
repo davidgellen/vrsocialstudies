@@ -426,8 +426,9 @@ public class Sebasucit : SingleRoom
 	void phaseEndOfExperiment_start()
 	{
 		Debug.Log("KONIEC EXPERIMENTU");
-		SceneManager.LoadScene("Menu");
-	}
+        //SceneManager.LoadScene("Menu");
+        SceneManager.LoadScene("SingleRoom3_RIG - 1 - vyskaAdaptiss");
+    }
 
 	/* --------- tlacidlo --------- */
 	void phasePause()

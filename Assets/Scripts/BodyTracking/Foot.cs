@@ -21,8 +21,8 @@ public class Foot : MonoBehaviour
         _followTarget = followObject.transform;
         _body = GetComponent<Rigidbody>();
         _body.collisionDetectionMode = CollisionDetectionMode.Continuous;
-        _body.interpolation = RigidbodyInterpolation.Interpolate;
-        // _body.mass = 20f;
+        _body.interpolation = RigidbodyInterpolation.None;
+        _body.mass = 20f;
     }
 
     public void setPositionOffset(Vector3 offset)
@@ -42,9 +42,9 @@ public class Foot : MonoBehaviour
 
         startRotation = transform.rotation;
         endRotation = followObject.transform.rotation;
-        transform.rotation = Quaternion.Lerp(startRotation, endRotation, Time.deltaTime * rotationSpeed);
+        _body.transform.rotation = Quaternion.Lerp(startRotation, endRotation, Time.deltaTime * rotationSpeed);
         Vector3 newRotation = new Vector3((followObject.transform.eulerAngles.x + rotationOffset.x), (followObject.transform.eulerAngles.y + rotationOffset.y), (followObject.transform.eulerAngles.z + rotationOffset.z));
-        transform.eulerAngles = newRotation;
+        _body.transform.eulerAngles = newRotation;
 
     }
 }
