@@ -15,9 +15,9 @@ public class Menu : MonoBehaviour
             for(int i = 0; i < characters.Length; i++)
             {
                 if (i == selection)
-                    characters[i].SetActive(false);
-                else
                     characters[i].SetActive(true);
+                else
+                    characters[i].SetActive(false);
             }
             PlayerPrefs.SetInt("choosen_avatar", selection); //PlayerPrefs.GetInt("choosen_avatar");
         }
@@ -26,6 +26,11 @@ public class Menu : MonoBehaviour
     public void LoadADHD()
     {
         SceneManager.LoadScene(1);
+    }
+
+    void Start()
+    {
+        SelectCharacter(0);
     }
 
     void Update()
