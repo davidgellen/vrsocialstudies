@@ -91,6 +91,10 @@ public class SingleRoom : MonoBehaviour
 	public float timeLimit = 30.0f;
 	public TextMesh timeText;
 	public GameObject timeObject;
+
+    [SerializeField] AlignToHeght alightToHeight;
+
+    public float phase2heightOffset = 0f;
 	
 	
     void Start()
@@ -344,4 +348,9 @@ public class SingleRoom : MonoBehaviour
 			Destroy(obj2, 0.5f);
 		}
 	}
+
+    public void setPhase2heightOffset(float newOffset)
+    {
+        phase2heightOffset = newOffset;
+    }
 }

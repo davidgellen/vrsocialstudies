@@ -8,7 +8,7 @@ public class ScManager : MonoBehaviour
 	public bool isSaved = false;
 	public SoundManager soundManager;
 	public MotionManager motionManager;
-	
+    public AlignToHeght alightToHeight;
 	public GameObject player;
 	public GameObject kid;
 	public static AudioSource audioSource;

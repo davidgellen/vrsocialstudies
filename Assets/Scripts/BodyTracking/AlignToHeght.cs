@@ -27,6 +27,10 @@ public class AlignToHeght : MonoBehaviour
     [SerializeField] GameObject rightLegHint;
     [SerializeField] GameObject rightLegController;
 
+    [SerializeField] float heightOffset = 0f;
+
+    [SerializeField] SingleRoom singleRoom;
+
     private float expectedHandsDistance = 1.45f;
 
     private float nextActionTime = 0.0f;
@@ -79,17 +83,25 @@ public class AlignToHeght : MonoBehaviour
 
         float distanceRightLegUmaHips = Vector3.Distance(rightLeg.transform.position, hips.transform.position);
         float distanceRightLegHipsController = Vector3.Distance(rightLegController.transform.position, hips.transform.position);
-        float diff = distanceRightLegHipsController - distanceRightLegUmaHips;
-        rightLegTarget.GetComponent<Foot>().setPositionOffset(new Vector3(diff, 0, 0));
-        leftLegTarget.GetComponent<Foot>().setPositionOffset(new Vector3(diff, 0, 0));
+        heightOffset = (distanceRightLegHipsController - distanceRightLegUmaHips);
+        singleRoom.setPhase2heightOffset(heightOffset);
+        rightLegTarget.GetComponent<Foot>().setLocalPositionOffset(new Vector3(heightOffset, 0, 0));
+        leftLegTarget.GetComponent<Foot>().setLocalPositionOffset(new Vector3(heightOffset, 0, 0));
 
         float distanceRightLegHead = Vector3.Distance(rightLeg.transform.position, head.transform.Find("HeadTop").gameObject.transform.position);
         float distanceRightLegHeadController = Vector3.Distance(rightLegController.transform.position, head.transform.Find("HeadTop").gameObject.transform.position);
         float diffHead = distanceRightLegHeadController - distanceRightLegHead;
         headController.transform.parent.gameObject.transform.position = new Vector3(headController.transform.parent.gameObject.transform.position.x, headController.transform.parent.gameObject.transform.position.y - diffHead, headController.transform.parent.gameObject.transform.position.z);
 
-        transform.position = transform.position - new Vector3(0, diff, 0);
-       // hipsTarget.GetComponent<CopyTransform>().setPositionOffset(hipsTarget.GetComponent<CopyTransform>().getPositionOffest() - new Vector3(diff, 0, 0));
+
+        float distanceRightLegControllerToTarget = Vector3.Distance(rightLegController.transform.position, rightLegTarget.transform.position);
+
+        transform.position = transform.position - new Vector3(0, heightOffset, 0);
+
+        leftLegTarget.GetComponent<Foot>().setGlobalHeightThreshold(leftLeg.transform.position.y);
+        rightLegTarget.GetComponent<Foot>().setGlobalHeightThreshold(rightLeg.transform.position.y);
+
+        // hipsTarget.GetComponent<CopyTransform>().setPositionOffset(hipsTarget.GetComponent<CopyTransform>().getPositionOffest() - new Vector3(distanceRightLegControllerToTarget, 0, 0));
         //Debug.Log("distanceRightLegHead: " + distanceRightLegHead);
         //Debug.Log("distanceRightLegHeadController: " + distanceRightLegHeadController);
         //Debug.Log("diff: " + diffHead);
@@ -113,5 +125,10 @@ public class AlignToHeght : MonoBehaviour
             hints[i].GetComponent<HintMover>().enabled = false;
         }
         Debug.Log("disabled Hints");
+    }
+
+    public float getHeightOffset()
+    {
+        return heightOffset;
     }
 }

@@ -14,6 +14,8 @@ public class Foot : MonoBehaviour
     float rotationProgress = -1;
     Quaternion startRotation;
     Quaternion endRotation;
+    [SerializeField] bool calibrated = false;
+    [SerializeField] float globalHeightThreshold = 0f;
 
     // Start is called before the first frame update
     void Start()
@@ -25,10 +27,17 @@ public class Foot : MonoBehaviour
         _body.mass = 20f;
     }
 
-    public void setPositionOffset(Vector3 offset)
+    public void setLocalPositionOffset(Vector3 offset)
     {
         positionOffset = offset;
     }
+
+    public void setGlobalHeightThreshold(float newThreshold)
+    {
+        globalHeightThreshold = newThreshold;
+        calibrated = true;
+    }
+
 
     void Update()
     {
@@ -37,8 +46,12 @@ public class Foot : MonoBehaviour
 
     void PhysicsMove()
     {
-
-        _body.transform.position = _followTarget.position + _followTarget.TransformDirection(positionOffset);
+        Vector3 wantedPosition = _followTarget.position + _followTarget.TransformDirection(positionOffset);
+        if (calibrated)
+        {
+            wantedPosition.y = Mathf.Max(wantedPosition.y, globalHeightThreshold * 0.85f);
+        }
+        _body.transform.position = wantedPosition;
 
         startRotation = transform.rotation;
         endRotation = followObject.transform.rotation;

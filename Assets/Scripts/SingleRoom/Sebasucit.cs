@@ -20,6 +20,8 @@ public class Sebasucit : SingleRoom
 	
 	private float timePause = 0;
 	public const float DELAY_TIME = 5.0f;
+
+    private float phase_2_offset = 0;
 	
 	
 	// ------------------------------- lipsync
@@ -306,7 +308,7 @@ public class Sebasucit : SingleRoom
 
         //scmanager.soundManager.Play("sound");
         scmanager.kid.transform.Rotate(0, -90, 0, Space.Self);
-        scmanager.kid.transform.Translate(0, 0.3f, 0, Space.Self);
+        scmanager.kid.transform.Translate(0, srm.phase2heightOffset, 0, Space.Self);
         scmanager.motionManager.Play("motion");
 	}
 	void phase2()
@@ -444,4 +446,9 @@ public class Sebasucit : SingleRoom
 	{
 		agent.SetActive(true);
 	}
+
+    public void setPhase2Offset(float newOffset)
+    {
+        phase_2_offset = newOffset;
+    }
 }
