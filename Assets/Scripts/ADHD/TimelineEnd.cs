@@ -10,7 +10,7 @@ public class TimelineEnd : MonoBehaviour
     {
         if (GetComponent<PlayableDirector>().state != PlayState.Playing)
         {
-            SceneManager.LoadScene(1);
+            SceneManager.LoadScene(0);
         }
     }
 }
