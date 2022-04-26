@@ -23,9 +23,9 @@ public class Menu : MonoBehaviour
         }
     }
 
-    public void LoadADHD()
+    public void LoadADHD(int scene)
     {
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene(scene);
     }
 
     void Start()
