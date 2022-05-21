@@ -21,6 +21,7 @@ using UnityEngine.UI;
 using UnityEngine.Windows.Speech;
 using UMA;
 using UMA.CharacterSystem;
+using Unity.VisualScripting;
 
 public class SingleRoom : MonoBehaviour
 {
@@ -31,8 +32,8 @@ public class SingleRoom : MonoBehaviour
 	public float timeAdded = 0; 						//kolko casu sa  pridalo kvoli rozpravaniu
 	
 	// misc
-	protected const float DEFAULT_PHASE_LENGTH = 40; 	// v sekundach
-	protected float phase_length = 120;
+	protected const float DEFAULT_PHASE_LENGTH = 2 * 20.0f; 	// v sekundach
+	protected float phase_length = 10;
 	
 	public int phase;					  				// aktualna faza
 	protected int wordcount = 0;
@@ -49,10 +50,16 @@ public class SingleRoom : MonoBehaviour
 	public RuntimeAnimatorController animatorControllerPhase3_2;
 	public RuntimeAnimatorController animatorControllerPhase3_3;
 	public Avatar animatorAvatar1;
+	public Avatar animatorAvatarFemale;
+	public Avatar animatorAvatarMale;
 	
 	// fix
 	public GameObject seatA;
 	public GameObject seatB;
+	
+	//
+	public GameObject seatA_playrecord;
+	public GameObject seatB_playrecord;
 
 	// zaznam a reprodukcia pohybu a zvuku
 	public ScManager scmanager;
@@ -64,7 +71,7 @@ public class SingleRoom : MonoBehaviour
 	public Vector3 seatPositionB;
 	public Quaternion seatRotationA;
 	public Quaternion seatRotationB;
-
+	
 	// riadenie
 	public Sebasucit sebasucit;
 	public Sebaprotekcia sebaprotekcia;
@@ -79,6 +86,17 @@ public class SingleRoom : MonoBehaviour
 	private float waitTime1 = 5.0f;
 	private float waitTime2 = 4.0f;
 	
+	// gui timer
+	public bool isGUITimerActive = false;
+	public float timeLimit = 30.0f;
+	public TextMesh timeText;
+	public GameObject timeObject;
+
+    [SerializeField] AlignToHeght alightToHeight;
+
+    public float phase2heightOffset = 0f;
+	
+	
     void Start()
     {
         Debug.Log("TERAZ SA NACITALA SCENA S PARAMETROM: "+MainMenuParam.param);
@@ -86,21 +104,16 @@ public class SingleRoom : MonoBehaviour
 		isCrying = false;
 		recordStuff();
 		
-		
-		if(MainMenuParam.param == 1) 	// sebasucit
-		{
-			this.gameObject.AddComponent<Sebasucit>();
-		}
-		else 							// sebaprotekcia
+		if (MainMenuParam.param == 3)						// sebakritika
 		{
 			this.gameObject.AddComponent<Sebaprotekcia>();
 		}
-		
-		
-
+		else 												// sebasucit
+		{
+			this.gameObject.AddComponent<Sebasucit>();
+		}
     }
-	
-	
+    
     void Update()
     {
 		// nie moc efektivne riesenie
@@ -113,11 +126,47 @@ public class SingleRoom : MonoBehaviour
 
 		if(isCrying)
 		cry();
+
+
+		if (isGUITimerActive)
+		{
+			timeObject.SetActive(true);
+			// show time
+			timeLimit = timeLimit - Time.deltaTime;
+			Debug.Log(timeLimit);
+        
+			float minutes = Mathf.FloorToInt(timeLimit / 60);
+			float seconds = Mathf.FloorToInt(timeLimit % 60);
+			timeText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+
+			if (timeLimit <= 1)
+			{
+				isGUITimerActive = false; 
+				timeObject.SetActive(false);
+			}
+		}
+		else
+		{
+			timeLimit = 30.0f;
+			timeObject.SetActive(false);
+		}
     }
 	
 	
 	/* ----------------------- pomocne funkcie oboch experimentov  ----------------------- */
 	// voice recognition funkcia
+	
+	/*protected void startGUItimer()
+	{
+		if (!isGUITimerActive)
+		{
+			timeLimit = 30.0f;
+			isGUITimerActive = true;
+			timeObject.SetActive(true);
+		}
+	}
+	*/
+
 	void recordStuff()
 	{
 		//wordcount = 0;
@@ -205,29 +254,67 @@ public class SingleRoom : MonoBehaviour
 		avatarToSitOnB.transform.position = seatB.transform.position;
 		avatarToSitOnB.transform.rotation = seatB.transform.rotation;
 	}
-	protected void changeColor(GameObject attacker, GameObject deffender)
+	protected void makeSeatPlayRecord(GameObject avatarToSitOnA, GameObject avatarToSitOnB)
 	{
-		Color color_attacker = Color.red;
-		Color color_deffender = Color.red;
+		/*
+		avatarToSitOnA.transform.position = seatPositionA;
+		avatarToSitOnA.transform.rotation = seatRotationA;
 		
+		avatarToSitOnB.transform.position = seatPositionB;
+		avatarToSitOnB.transform.rotation = seatRotationB;
+		*/
+		avatarToSitOnA.transform.position = seatA_playrecord.transform.position;
+		avatarToSitOnA.transform.rotation = seatA_playrecord.transform.rotation;
 		
-		if(MainMenuParam.param == 1) // sebasucit
+		avatarToSitOnB.transform.position = seatB_playrecord.transform.position;
+		avatarToSitOnB.transform.rotation = seatB_playrecord.transform.rotation;
+	}
+	protected void makeSeat(GameObject obj, bool positionA)
+	{
+		if(positionA)
 		{
-			color_attacker = Color.black;
-			color_deffender = Color.green;
+			obj.transform.position = seatPositionA;
+			obj.transform.rotation = seatRotationA;
 		}
-		else 					// sebaprotekcia
+		else
 		{
-			color_attacker = Color.blue;
-			color_deffender = Color.black;
+			obj.transform.position = seatPositionB;
+			obj.transform.rotation = seatRotationB;
 		}
-		
-		
-		attacker.GetComponent<DynamicCharacterAvatar>().SetColor("Shirt", color_attacker);
-		attacker.GetComponent<DynamicCharacterAvatar>().BuildCharacter();
-		
-		deffender.GetComponent<DynamicCharacterAvatar>().SetColor("Shirt", color_deffender);
-		deffender.GetComponent<DynamicCharacterAvatar>().BuildCharacter();
+	}
+
+	/*
+	MODRA = 1
+	CIERNA = 2
+	ZLTA = 3
+	CERVENA = 4
+	*/
+	protected void changeColor(GameObject uma, int colorcode)
+	{
+		Color uma_blue = new Color(51/255f, 63/255f, 140/255f);
+		Color uma_black = new Color(0/255f, 0/255f, 0/255f);
+		Color uma_yellow = new Color(255/255f, 255/255f, 0/255f);
+		Color uma_red = new Color(240/255f, 15/255f, 15/255f);
+		Color color_chosen = new Color(0,0,0);
+
+		switch (colorcode)
+		{
+			case 1:
+				color_chosen = uma_blue;
+				break;
+			case 2:
+				color_chosen = uma_black;
+				break;
+			case 3: 
+				color_chosen = uma_yellow;
+				break;
+			case 4:
+				color_chosen = uma_red;
+				break;
+		}
+
+		uma.GetComponent<DynamicCharacterAvatar>().SetColor("Shirt", color_chosen);
+		uma.GetComponent<DynamicCharacterAvatar>().UpdateColors(true);
 	}
 	protected void loadCharacterParameters()
 	{
@@ -250,7 +337,7 @@ public class SingleRoom : MonoBehaviour
 			timer1 = 0.0f;
 			
 			GameObject obj1 = Instantiate(tear, tear1_position.transform.position, tear1_position.transform.rotation);
-			Destroy(obj1, 3);
+			Destroy(obj1, 0.5f);
 		}
 		if(timer2 >= waitTime2)
 		{
@@ -258,7 +345,12 @@ public class SingleRoom : MonoBehaviour
 			timer2 = 0.0f;
 			
 			GameObject obj2 = Instantiate(tear, tear2_position.transform.position, tear2_position.transform.rotation);
-			Destroy(obj2, 3);
+			Destroy(obj2, 0.5f);
 		}
 	}
+
+    public void setPhase2heightOffset(float newOffset)
+    {
+        phase2heightOffset = newOffset;
+    }
 }

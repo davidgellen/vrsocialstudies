@@ -4,27 +4,63 @@ using UnityEngine;
 
 public class AlignToHeght : MonoBehaviour
 {
+    [SerializeField] GameObject head;
+    [SerializeField] GameObject headTarget;
+    [SerializeField] GameObject headController;
+    [SerializeField] GameObject hips;
+    [SerializeField] GameObject hipsTarget;
+    [SerializeField] GameObject hipsController;
     [SerializeField] GameObject leftHand;
     [SerializeField] GameObject leftHandTarget;
+    [SerializeField] GameObject leftHandHint;
+    [SerializeField] GameObject leftHandController;
     [SerializeField] GameObject rightHand;
     [SerializeField] GameObject rightHandTarget;
+    [SerializeField] GameObject rightHandHint;
+    [SerializeField] GameObject rightHandController;
     [SerializeField] GameObject leftLeg;
     [SerializeField] GameObject leftLegTarget;
+    [SerializeField] GameObject leftLegHint;
+    [SerializeField] GameObject leftLegController;
     [SerializeField] GameObject rightLeg;
     [SerializeField] GameObject rightLegTarget;
+    [SerializeField] GameObject rightLegHint;
+    [SerializeField] GameObject rightLegController;
+
+    [SerializeField] float heightOffset = 0f;
+
+    [SerializeField] SingleRoom singleRoom;
+
+    private float expectedHandsDistance = 1.45f;
+
+    private float nextActionTime = 0.0f;
+    public float period = 4f;
 
     // Start is called before the first frame update
     void Start()
     {
-        GameObject[] rootBones = { leftHand, rightHand, leftLegTarget, rightLegTarget };
-        GameObject[] targets = { leftHandTarget, rightHandTarget, leftLegTarget, rightLegTarget };
+
+        GameObject[] rootBones = { head, hips, leftHand, rightHand, leftLeg, rightLeg };
+        GameObject[] targets = { headTarget, hipsTarget, leftHandTarget, rightHandTarget, leftLegTarget, rightLegTarget };
+        GameObject[] controllers = { headController, hipsController, leftHandController, rightHandController, leftLegController, rightLegController};
+        GameObject[] hints = { leftHandHint, rightHandHint, leftLegHint, rightLegHint };
         alignTargetsToRoots(rootBones, targets);
+        StartCoroutine(disableHints(hints));
+        StartCoroutine(enableHints(hints));
+        StartCoroutine(alighnToHeight());
+        
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        //if (Time.time > nextActionTime)
+        //{
+        //    nextActionTime += period;
+        //    Debug.Log("target Left Hand: " + leftHandTarget.transform.position.y);
+        //    Debug.Log("UMA left Hand: " + leftHand.transform.position.y);
+        //    Debug.Log("ROZDIEL RUK" + (leftHandTarget.transform.position.y - leftHand.transform.position.y));
+        //}
     }
 
     public void alignTargetsToRoots(GameObject[] rootBones, GameObject[] targets)
@@ -36,5 +72,63 @@ public class AlignToHeght : MonoBehaviour
             targets[i].transform.eulerAngles = newRotation;
             targets[i].transform.position = newPosition;
         }
+    }
+
+    IEnumerator alighnToHeight()
+    {
+        yield return new WaitForSeconds(4);
+        GameObject[] rootBones = { head, hips, leftHand, rightHand, leftLeg, rightLeg };
+        GameObject[] targets = { headTarget, hipsTarget, leftHandTarget, rightHandTarget, leftLegTarget, rightLegTarget };
+        GameObject[] controllers = { headController, hipsController, leftHandController, rightHandController, leftLegController, rightLegController };
+
+        float distanceRightLegUmaHips = Vector3.Distance(rightLeg.transform.position, hips.transform.position);
+        float distanceRightLegHipsController = Vector3.Distance(rightLegController.transform.position, hips.transform.position);
+        heightOffset = (distanceRightLegHipsController - distanceRightLegUmaHips);
+        singleRoom.setPhase2heightOffset(heightOffset);
+        rightLegTarget.GetComponent<Foot>().setLocalPositionOffset(new Vector3(heightOffset, 0, 0));
+        leftLegTarget.GetComponent<Foot>().setLocalPositionOffset(new Vector3(heightOffset, 0, 0));
+
+        float distanceRightLegHead = Vector3.Distance(rightLeg.transform.position, head.transform.Find("HeadTop").gameObject.transform.position);
+        float distanceRightLegHeadController = Vector3.Distance(rightLegController.transform.position, head.transform.Find("HeadTop").gameObject.transform.position);
+        float diffHead = distanceRightLegHeadController - distanceRightLegHead;
+        headController.transform.parent.gameObject.transform.position = new Vector3(headController.transform.parent.gameObject.transform.position.x, headController.transform.parent.gameObject.transform.position.y - diffHead, headController.transform.parent.gameObject.transform.position.z);
+
+
+        float distanceRightLegControllerToTarget = Vector3.Distance(rightLegController.transform.position, rightLegTarget.transform.position);
+
+        transform.position = transform.position - new Vector3(0, heightOffset, 0);
+
+        leftLegTarget.GetComponent<Foot>().setGlobalHeightThreshold(leftLeg.transform.position.y);
+        rightLegTarget.GetComponent<Foot>().setGlobalHeightThreshold(rightLeg.transform.position.y);
+
+        // hipsTarget.GetComponent<CopyTransform>().setPositionOffset(hipsTarget.GetComponent<CopyTransform>().getPositionOffest() - new Vector3(distanceRightLegControllerToTarget, 0, 0));
+        //Debug.Log("distanceRightLegHead: " + distanceRightLegHead);
+        //Debug.Log("distanceRightLegHeadController: " + distanceRightLegHeadController);
+        //Debug.Log("diff: " + diffHead);
+    }
+
+    IEnumerator enableHints(GameObject[] hints)
+    {
+        yield return new WaitForSeconds(3);
+        for (int i = 0; i < hints.Length; i++)
+        {
+            hints[i].GetComponent<HintMover>().enabled = true;
+        }
+        Debug.Log("enabled Hints");
+    }
+
+    IEnumerator disableHints(GameObject[] hints)
+    {
+        yield return new WaitForSeconds(1);
+        for (int i = 0; i < hints.Length; i++)
+        {
+            hints[i].GetComponent<HintMover>().enabled = false;
+        }
+        Debug.Log("disabled Hints");
+    }
+
+    public float getHeightOffset()
+    {
+        return heightOffset;
     }
 }
